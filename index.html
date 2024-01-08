@@ -19,8 +19,8 @@
     <div class="header-1">
       <img src="./assets/logo.png" alt="">
     </div>
-    <div class="header-2">
-      <div class="item">
+    <div id="hd" class="header-2">
+      <!-- <div class="item">
         <div class="icon"><img src="./assets/home-alt.svg" alt=""> </div>
         <div class="htitle-color"> Home </div>
       </div>
@@ -35,7 +35,7 @@
       <div class="item">
         <div class="icon"><img src="./assets/bookmark.svg" alt=""> </div>
         <div class="htitle"> Bookmark </div>
-      </div>
+      </div> -->
     </div>
     </div>
     <div class="header-3">
@@ -52,9 +52,7 @@
         <img class="circle" src="./assets/Ellipse.svg" alt="">
       </div>
       <div class="user-specs">
-        <div id="avatar">
-
-        </div>
+        <img class="avatar" src="./assets/Bessie Cooper.png" alt="">
         <div class="username">
           Bessie Cooper
         </div>
@@ -67,72 +65,31 @@
   </header>
   <main class="pagebody">
     <div class="sidebar">
-      <div class="sidebar-block">
-        <div class="block-heading">
-          <div class="icon-action">
-            <img src="./assets/siren-on.svg" alt="">
-          </div>
-          <div class="heading">
-            News
-          </div>
-          <div class="button">
-            <img src="./assets/Button.svg" alt="">
-          </div>
-        </div>
-        <div class="block-heading-chosen">
-          <div class="icon-action">
-            <img src="./assets/chalkboard.svg" alt="">
-          </div>
-          <div class="heading-chosen">
-            Technology
-          </div>
-          <div class="button">
-            <img src="./assets/Button.svg" alt="">
-          </div>
-        </div>
-        <div class="block-heading">
-          <div class="icon-action">
-            <img src="./assets/play.svg" alt="">
-          </div>
-          <div class="heading">
-            Music
-          </div>
-        </div>
-        <div class="block-heading">
-          <div class="icon-action">
-            <img src="./assets/comment-alt.svg" alt="">
-          </div>
-          <div class="heading">
-            Feedback
-          </div>
-          <div class="button">
-            <img src="./assets/Button99.svg" alt="">
-          </div>
-        </div>
+      <div id="sb" class="sidebar-block">
       </div>
       <div class="sidebar-block">
-        <div class="block-heading">
+        <button onclick="changeClass('sidebarSelect_4')" id="sidebarSelect_4" class="block-heading">
           <div class="icon-action">
             <img src="./assets/clipboard-check.svg" alt="">
           </div>
           <div class="heading">
-            Feedback
+            Survey
           </div>
           <div class="button">
             <img src="./assets/Button.svg" alt="">
           </div>
-        </div>
+        </button>
       </div>
     </div>
     <div class="content">
-      <div class="content-body">
+      <div id="postBlock" class="content-body">
         <div class="content-heading">
           <img src="./assets/laptop.svg" alt="">
           <div>
             Technology
           </div>
         </div>
-        <div class="post">
+        <!-- <div class="post">
           <div class="post-heading">
             <div class="info-action">
               <div class="user-info">
@@ -143,18 +100,29 @@
                   <div class="post-time">15 minutes ago</div>
                 </div>
               </div>
-              <img src="./assets/Button Action.svg" alt="">
-              <img src="./assets/Button Action (1).svg" alt="">
-              <img src="./assets/Button Action (2).svg" alt="">
+              <img class="post-action-button" src="./assets/Button Action.svg" alt="">
+              <img class="post-action-button" src="./assets/Button Action (1).svg" alt="">
+              <img class="post-action-button" src="./assets/Button Action (2).svg" alt="">
             </div>
-            <p class="post-text">Search input is a must have of almost all apps. In this cheatsheet you can get inspiration on 6 variants of this component.</p>
+            <p class="post-text">Search input is a must have of almost all apps. In this cheatsheet you can get
+              inspiration on 6 variants of this component.</p>
             <p class="post-text"> Which one is your favorite?</p>
             <p class="post-link">View more..</p>
           </div>
           <img class="post-img" src="./assets/Rectangle 2.svg" alt="">
           <div class="post-action">
-            <img src="./assets/Add Reaction.svg" alt="">
-            <img src="./assets/Add Comment.svg" alt="">
+            <div class="post-add-action">
+              <img class="post-reaction-button" src="./assets/reaction.svg" alt="">
+              <div class="post-comment-reaction-count-textstyle">
+                41 Reactions
+              </div>
+            </div>
+            <div class="post-add-action">
+              <img class="post-reaction-button" src="./assets/comment.svg" alt="">
+              <div class="post-comment-reaction-count-textstyle">
+                32 comments
+              </div>
+            </div>
           </div>
           <div class="post-commentsection">
             <div class="post-comment">
@@ -177,6 +145,7 @@
                 <div class="comment-text">Still doing this man</div>
               </div>
             </div>
+            
             <div class="post-comment">
               <img class="comment-avatar" src="./assets/Brosanova.png" alt="">
               <div class="comment-noava">
@@ -204,11 +173,11 @@
               <img class="commentbar-avatar" src="./assets/Bessie Cooper.png" alt="">
               <div class="commentbar-inputfield">
                 <div class="commentbar-inputfield-frame">
-                  <div class="commentbar-inputfield-frame-textbox">
-                    Write a comment..
-                  </div>
+                  <input type="text" placeholder="Write a comment.." class="commentbar-inputfield-frame-textbox">
+
+                  </input>
                 </div>
-                <div class="comment-button">
+                <div class="comment-button-shaded">
                   <div class="comment-post">
                     Post
                   </div>
@@ -216,10 +185,10 @@
               </div>
             </div>
           </div>
-        </div>
-      </div>  
+        </div> -->
+      </div>
     </div>
   </main>
+  <script src="script.js"></script>
 </body>
-
 </html>
