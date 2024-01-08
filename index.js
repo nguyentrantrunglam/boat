@@ -1,4 +1,4 @@
-var activeHeader2Id = 3
+var activeHeader2Id = 1
 
 const headerNavItems = [
     {
@@ -32,6 +32,11 @@ function renderHeader2Item(item, isActive) {
     `
 }
 
+function handleClickHeader2Item(id) {
+    activeHeader2Id = id
+    renderHeader2()
+}
+
 function renderHeader2() {
     const header2 = document.querySelector(".header-2")
     let innerHeader2 = ''
@@ -39,12 +44,11 @@ function renderHeader2() {
         innerHeader2 += renderHeader2Item(item, item.id == activeHeader2Id)
     })
     header2.innerHTML = innerHeader2
-
-
 }
-function handleClickHeader2Item(id) {
-    activeHeader2Id = id //set active id
+
+function renderApp() {
     renderHeader2()
+    // render ...
 }
 
-renderHeader2()
+renderApp()
