@@ -141,6 +141,7 @@ body {
     background-position: top center;
     border-radius: 50%;
     cursor: pointer;
+    object-fit: cover;
 }
 
 .username {
@@ -190,6 +191,7 @@ body {
     align-items: center;
     justify-content: center;
     border-radius: 25px;
+    cursor: pointer;
 }
 
 .block-heading-chosen {
@@ -215,7 +217,6 @@ body {
 }
 
 .heading-chosen{
-    color: var(--Text-Primary, #191919);
     font-family: Roboto;
     font-size: 14px;
     font-style: normal;
@@ -232,6 +233,10 @@ body {
     padding: 0px 6px;
     justify-content: center;
     align-items: center;
+    gap: 10px;
+    border-radius: 40px;
+    background: var(--Branding-Third, #E72511);
+    height: 18px;
 }
 
 .noti-num {
@@ -240,7 +245,7 @@ body {
     font-size: 12px;
     font-style: normal;
     font-weight: 700;
-    line-height: 24px;
+    line-height: 18px;
 }
 
 .icon-action {
@@ -252,13 +257,12 @@ body {
 .content{
     padding-top: 61px;
     padding-left: 260px;
-    height: 100%;
-    width: 100vw;
     align-items: center;
     background-color: F8F8F8;
     justify-content: center;
     border-top: 1px solid #E5E5E5;
     border-left: 1px solid #E5E5E5;
+    height: 100%;
 }
 
 .content-body{
@@ -288,12 +292,21 @@ body {
     background-color: transparent;
 }
 
+.post-blocks {
+    display: flex;
+    width: 620px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+    flex: 1 0 0;
+}
+
 .post{
     background-color: #FFF;
     border-radius: 25px;
     border-color: #767676;
     width: 100%;
-    background-color: #FFF;
+    gap: 24px;
 }
 
 .post-heading{
@@ -330,6 +343,7 @@ body {
     background-position: top center;
     border-radius: 50%;
     cursor: pointer;
+    object-fit: cover;
 }
 
 .name-time{}
@@ -387,7 +401,35 @@ body {
     align-items: center;
     gap: 16px;
     align-self: stretch;
-    border-bottom: #E5E5E5;
+    border-bottom: 1px #E5E5E5;
+}
+
+.line {
+    height: 1px;
+    align-self: stretch;
+    background: var(--Background-BG-2, #E5E5E5);
+}
+
+.post-action-button{
+    cursor: pointer;
+}
+
+.post-add-action {
+    display: flex;
+    padding: 8px 16px;
+    align-items: center;
+    gap: 16px;
+    align-self: stretch;
+    flex: 1 0 0;
+    justify-content: center;
+}
+
+.post-reaction-button {
+    display: flex;
+    padding: 10px;
+    align-items: flex-start;
+    gap: 10px;
+    background: var(--Text-White, #FFF);
 }
 
 .post-commentsection{
@@ -397,6 +439,15 @@ body {
     align-items: flex-start;
     gap: 8px;
     align-self: stretch;
+}
+
+.post-comment-reaction-count-textstyle {
+    color: var(--Text-Primary, #191919);
+    font-family: Roboto;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 24px; /* 171.429% */
 }
 
 .post-comment{
@@ -437,6 +488,7 @@ body {
     background-position: top center;
     border-radius: 50%;
     cursor: pointer;
+    object-fit: cover;
 }
 
 .comment-info{
@@ -474,6 +526,7 @@ body {
     background-size: cover;
     background-position: top center;
     border-radius: 50%;
+    object-fit: cover;
 }
 
 .commentbar-inputfield{
@@ -496,16 +549,43 @@ body {
 
 .commentbar-inputfield-frame-textbox{
     flex: 1 0 0;
-    color: var(--Text-Hint---Place-Holder, #A0A0A0);
+    color: #A0A0A0;
     /* Body Text/Default */
     font-family: Roboto;
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
     line-height: 24px; /* 171.429% */
+    background-color: transparent;
+    border: transparent;
+    outline: none;
+}
+
+.commentbar-inputfield-frame-textbox-focused{
+    flex: 1 0 0;
+    color: black;
+    /* Body Text/Default */
+    font-family: Roboto;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px; /* 171.429% */
+    background-color: transparent;
+    border: transparent;
+    outline: none;
 }
 
 .comment-button{
+    display: flex;
+    padding: 4px 16px;
+    align-items: flex-start;
+    gap: 10px;
+    border-radius: 40px;
+    background: var(--Branding-Priamry, #007C7C);
+    cursor: pointer;
+}
+
+.comment-button-shaded{
     display: flex;
     padding: 4px 16px;
     align-items: flex-start;
