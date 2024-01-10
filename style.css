@@ -262,7 +262,6 @@ body {
     justify-content: center;
     border-top: 1px solid #E5E5E5;
     border-left: 1px solid #E5E5E5;
-    height: 100%;
 }
 
 .content-body{
@@ -356,6 +355,7 @@ body {
     font-style: normal;
     font-weight: 700;
     line-height: 24px; /* 171.429% */
+    white-space: nowrap;
 }
 
 .post-time{
@@ -455,10 +455,32 @@ body {
     align-items: flex-start;
     gap: 12px;
     align-self: stretch;
+    white-space: nowrap;
 }
 
-.comment-noava{
+.post-comment-action{
+    display: flex;
+    align-items: end;
+    gap: 8px;
+    float: right;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    margin-right: 8px;
+    margin-top: 10px;
+}
 
+.post-comment-whitespace{
+    width: 100%
+}
+
+.post-comment-action-block {
+    padding: 5px;
+    width: 25px;
+    height: 25px;
+    border-radius: 5px;
+    justify-content: center;
+    cursor: pointer;
 }
 
 .view-comments{
@@ -507,6 +529,7 @@ body {
     font-style: normal;
     font-weight: 400;
     line-height: 18px; /* 150% */
+    white-space: nowrap;
 }
 
 .comment-text{

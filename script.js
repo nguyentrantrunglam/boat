@@ -46,7 +46,7 @@ const sidebarItems2 = [
 
 const listPost = [
     {
-        id: "1",
+        id: 1,
         avatar: "./assets/postavatar.png",
         name: "Ralph Edwards",
         time: 15,
@@ -57,7 +57,7 @@ const listPost = [
         comments: [
             {
                 postid: 1,
-                id: "1",
+                id: 1,
                 avatar: "./assets/Bessie Cooper.png",
                 name: "Bessie Cooper",
                 time: 15,
@@ -65,32 +65,32 @@ const listPost = [
             },
             {
                 postid: 1,
-                id: "2",
+                id: 2,
                 avatar: "./assets/Theresa Webb.png",
-                name: "Bessie Cooper",
+                name: "Theresa Webb",
                 time: 30,
                 content: "Still doing this man"
             },
             {
                 postid: 1,
-                id: "3",
+                id: 3,
                 avatar: "./assets/Brosanova.png",
-                name: "Bessie Cooper",
+                name: "Brosanova",
                 time: 40,
                 content: "Still doing this man"
             },
             {
                 postid: 1,
-                id: "4",
+                id: 4,
                 avatar: "./assets/Kathryn Murphy.png",
-                name: "Bessie Cooper",
+                name: "Kathryn Murphy",
                 time: 60,
                 content: "Great choice of Acronym AF1's"
             },
         ]
     },
     {
-        id: "2",
+        id: 2,
         avatar: "./assets/postavatar.png",
         name: "Ralph Edwards",
         time: 15,
@@ -100,34 +100,34 @@ const listPost = [
         img: "./assets/Rectangle 2.svg",
         comments: [
             {
-                postid: 1,
-                id: "1",
+                postid: 2,
+                id: 1,
                 avatar: "./assets/Bessie Cooper.png",
                 name: "Bessie Cooper",
                 time: 15,
                 content: "Soo great!!!"
             },
             {
-                postid: 1,
-                id: "2",
+                postid: 2,
+                id: 2,
                 avatar: "./assets/Theresa Webb.png",
-                name: "Bessie Cooper",
+                name: "Theresa Webb",
                 time: 30,
                 content: "Still doing this man"
             },
             {
-                postid: 1,
-                id: "3",
+                postid: 2,
+                id: 3,
                 avatar: "./assets/Brosanova.png",
-                name: "Bessie Cooper",
+                name: "Brosanova",
                 time: 40,
                 content: "Still doing this man"
             },
             {
-                postid: 1,
-                id: "4",
+                postid: 2,
+                id: 4,
                 avatar: "./assets/Kathryn Murphy.png",
-                name: "Bessie Cooper",
+                name: "Kathryn Murphy",
                 time: 60,
                 content: "Great choice of Acronym AF1's"
             },
@@ -282,14 +282,15 @@ function renderPostItem(post) {
         </div>
         <div class="line"></div>
 
-        <div id="commentsBox" class="post-commentsection"></div>
+        <div id="commentsBox-${post.id}" class="post-commentsection"></div>
         
     
         <div class="comment-bar">
             <img class="commentbar-avatar" src="./assets/Bessie Cooper.png" alt="">
             <div class="commentbar-inputfield">
                 <div class="commentbar-inputfield-frame">
-                    <input onblur="changeCommentStyle(${post.id})" id="commentInput-${post.id}" type="text" placeholder="Write a comment.." class="commentbar-inputfield-frame-textbox">
+                    <input onblur="onblurCommentBar(${post.id})" onfocus="onfocusCommentBar(${post.id})" 
+                    id="commentInput-${post.id}" type="text" placeholder="Write a comment.." class="commentbar-inputfield-frame-textbox">
                     </input>
                 </div>
                 <div onclick="getCommentValue(${post.id})" id="commentButton-${post.id}" class="comment-button-shaded">
@@ -314,48 +315,90 @@ function renderPostItem(post) {
     // postItem += `
 
 // onblur="getCommentValue(${post.postid})"4
-function changeCommentStyle(id) {
-    var val = document.getElementById("commentInput-"+id)
-    val.classList.replace("commentbar-inputfield-frame-textbox","commentbar-inputfield-frame-textbox-focused")
+function onfocusCommentBar(id) {
+    var idVal = document.getElementById("commentInput-"+id)
+    idVal.classList.replace("commentbar-inputfield-frame-textbox","commentbar-inputfield-frame-textbox-focused")
+    var element = document.getElementById("commentButton-" + id);
+    element.classList.replace("comment-button-shaded", "comment-button");
 }
 
-function changeClassCommentShaded() {
-    var element = document.querySelector(".comment-button-shaded");
-    var a = document.querySelector(".commentbar-inputfield-frame-textbox");
-    if (a) {
-        element.classList.replace("comment-button-shaded", "comment-button");
-    }
+// function changeClassCommentShaded() {
+//     var element = document.querySelector(".comment-button-shaded");
+//     var a = document.querySelector(".commentbar-inputfield-frame-textbox");
+//     if (a) {
+//         element.classList.replace("comment-button-shaded", "comment-button");
+//     }
+//     console.log("happened");
+// }
+
+function editMyComment(postId,commentId) {
+    console.log("happened");
+    const commentBar = document.getElementById("commentInput-"+postId)
+    commentBar.value = listPost[postId-1].comments[commentId-1]
 }
 
-function changeClassComment() {
-    var element = document.querySelector(".comment-button");
-    var a = document.querySelector(".commentbar-inputfield-frame-textbox");
-    if (a) {
-        element.classList.replace("comment-button", "comment-button-shaded");
-    }
+function onblurCommentBar(id) {
+    var element = document.getElementById("commentButton-" + id);
+    element.classList.replace("comment-button", "comment-button-shaded");
 }
 
 function renderComments() {
-    const commentsBlock = document.querySelector("#commentsBox")
-    let commentItem = ''
     listPost.forEach(post =>
+        {const commentsBlock = document.querySelector("#commentsBox-"+post.id)
+        let commentItem = ''
+        console.log(post.id)
         post.comments.forEach(comment => {
         commentItem += renderCommentItem(comment)
-    })
+        commentsBlock.innerHTML = commentItem;
+    })}
     )
-    commentsBlock.innerHTML = commentItem;
 }
+
+function commentActionAppear(postId,commentId) {
+    // console.log("happened");
+    const commentAction = document.getElementById("commentAction-"+postId+"-"+commentId)
+    let actionButtons = 
+    `
+    <div class="post-comment-action">
+            <button onclick="editMyComment(1,1)" id="editComment" class="post-comment-action-block">
+              <img style='height: 100%; width: 100%; object-fit: contain' src="./assets/pen.png" alt="">
+            </button>
+            <button id="deleteComment" class="post-comment-action-block">
+              <img style='height: 100%; width: 100%; object-fit: contain' src="./assets/trash.png" alt="">
+            </button>
+          </div>
+    `
+    // if (name == userInfo.username) {
+    //     commentAction.innerHTML = actionButtons
+    //     const comment = document.getElementById("postComment-"+postId+"-"+commentId)
+    //     comment.addEventListener("mouseleave", (event) => {commentAction.innerHTML = ``}, false)
+    // }
+    commentAction.innerHTML = actionButtons
+    const comment = document.getElementById("postComment-"+postId+"-"+commentId)
+    comment.addEventListener("mouseleave", (event) => {commentAction.innerHTML = ``}, false)
+    // CONFIGURE ADDEVENTLISTENER ALSO FOR MOUSEENTER EVENT
+    const editButton = document.getElementById('deleteComment');
+
+    editButton.addEventListener('click', event => {
+    console.log('button clicked');
+});
+}
+
 
 function renderCommentItem(comment) {
     return `
-    <div class="post-comment">
+    <div id="postComment-${comment.postid}-${comment.id}" class="post-comment" 
+    onmouseover="commentActionAppear(${comment.postid},${comment.id})">
       <img class="comment-avatar" src="${comment.avatar}" alt="">
-      <div class="comment-noava">
+      <div>
         <div class="comment-info">
           <div class="post-name">${comment.name}</div>
           <div class="comment-time">${comment.time} minutes ago</div>
         </div>
         <div class="comment-text">${comment.content}</div>
+      </div>
+      <div class= "post-comment-whitespace"></div>
+      <div id="commentAction-${comment.postid}-${comment.id}">
       </div>
     </div>
     `
@@ -365,22 +408,25 @@ function renderNewCommentItem(val,id){
     listPost[id-1].comments.push(
     {
         postid: id,
-        id: listPost[id].comments[listPost[id].comments.length - 1].id + 1,
+        id: listPost[id-1].comments[listPost[id-1].comments.length - 1].id + 1,
         avatar: "./assets/"+userInfo.img,
         name: userInfo.username,
         time: 0,
         content: val
     })
-    renderPosts();
+    clearText("commentInput-"+listPost[id-1].id)
+    renderComments();
 }
 
 function getCommentValue(id) {
-    console.log("This is ID " + id);
     const idj = "commentInput-"+id
-    console.log(idj);
     const val = document.getElementById(idj).value
-    console.log(val);
     renderNewCommentItem(val,id)
+}
+
+function clearText(id) {
+    const val = document.getElementById(id).value
+    document.getElementById(id).value = '';
 }
 
 function renderApp() {
@@ -392,5 +438,6 @@ function renderApp() {
 
 renderApp()
 
-document.querySelector(".commentbar-inputfield-frame-textbox").addEventListener('focus', changeClassCommentShaded);
-document.querySelector(".commentbar-inputfield-frame-textbox").addEventListener('focusout', changeClassComment);
+
+// document.querySelector(".commentbar-inputfield-frame-textbox").addEventListener('focus', changeClassCommentShaded);
+// document.querySelector(".commentbar-inputfield-frame-textbox").addEventListener('focusout', changeClassComment);
