@@ -1,9 +1,43 @@
 // import {userInfo} from './user.js'
 
 const userInfo = {
-    img: "Bessie Cooper.png",
+    img: "./assets/Bessie Cooper.png",
     username: "Bessie Cooper"
 }
+
+const userList = [
+    {
+        id: 1,
+        avatar: "./assets/Bessie Cooper.png",
+        username: "Bessie Cooper",
+        user: true
+    },
+    {
+        id: 2,
+        avatar: "./assets/Theresa Webb.png",
+        username: "Theresa Webb",
+        user: false
+    },
+    {
+        id: 3,
+        avatar: "./assets/Brosanova.png",
+        username: "Brosanova",
+        user: false
+    },
+    {
+        id: 4,
+        avatar: "./assets/Kathryn Murphy.png",
+        username: "Kathryn Murphy",
+        user: false
+    },
+    {
+        id: 5,
+        avatar: "./assets/postavatar.png",
+        username: "Ralph Edwards",
+        user: false
+    }
+]
+
 console.log(userInfo);
 
 var activeSideBarId = 2
@@ -47,8 +81,7 @@ const sidebarItems2 = [
 const listPost = [
     {
         id: 1,
-        avatar: "./assets/postavatar.png",
-        name: "Ralph Edwards",
+        userid: 5,
         time: 15,
         content: "Search input is a must have of almost all apps. In this cheatsheet you can get inspiration on 6 variants of this component. Which one is your favorite?",
         reactions: 41,
@@ -58,32 +91,28 @@ const listPost = [
             {
                 postid: 1,
                 id: 1,
-                avatar: "./assets/Bessie Cooper.png",
-                name: "Bessie Cooper",
+                userid: 1,
                 time: 15,
                 content: "Soo great!!!"
             },
             {
                 postid: 1,
                 id: 2,
-                avatar: "./assets/Theresa Webb.png",
-                name: "Theresa Webb",
+                userid: 2,
                 time: 30,
                 content: "Still doing this man"
             },
             {
                 postid: 1,
                 id: 3,
-                avatar: "./assets/Brosanova.png",
-                name: "Brosanova",
+                userid: 3,
                 time: 40,
                 content: "Still doing this man"
             },
             {
                 postid: 1,
                 id: 4,
-                avatar: "./assets/Kathryn Murphy.png",
-                name: "Kathryn Murphy",
+                userid: 4,
                 time: 60,
                 content: "Great choice of Acronym AF1's"
             },
@@ -91,8 +120,7 @@ const listPost = [
     },
     {
         id: 2,
-        avatar: "./assets/postavatar.png",
-        name: "Ralph Edwards",
+        userid: 5,
         time: 15,
         content: "Search input is a must have of almost all apps. In this cheatsheet you can get inspiration on 6 variants of this component. Which one is your favorite?",
         reactions: 41,
@@ -102,32 +130,28 @@ const listPost = [
             {
                 postid: 2,
                 id: 1,
-                avatar: "./assets/Bessie Cooper.png",
-                name: "Bessie Cooper",
+                userid: 1,
                 time: 15,
                 content: "Soo great!!!"
             },
             {
                 postid: 2,
                 id: 2,
-                avatar: "./assets/Theresa Webb.png",
-                name: "Theresa Webb",
+                userid: 2,
                 time: 30,
                 content: "Still doing this man"
             },
             {
                 postid: 2,
                 id: 3,
-                avatar: "./assets/Brosanova.png",
-                name: "Brosanova",
+                userid: 3,
                 time: 40,
                 content: "Still doing this man"
             },
             {
                 postid: 2,
                 id: 4,
-                avatar: "./assets/Kathryn Murphy.png",
-                name: "Kathryn Murphy",
+                userid: 4,
                 time: 60,
                 content: "Great choice of Acronym AF1's"
             },
@@ -252,9 +276,9 @@ function renderPostItem(post) {
         <div class="post-heading">
             <div class="info-action">
                 <div class="user-info">
-                    <img class="post-avatar" src="${post.avatar}" alt="">
+                    <img class="post-avatar" src="${userList[post.userid-1].avatar}" alt="">
                     <div class="name-time">
-                        <div class="post-name">${post.name}</div>
+                        <div class="post-name">${userList[post.userid-1].username}</div>
                         <div class="post-time">${post.time} minutes ago</div>
                     </div>
                 </div>
@@ -285,7 +309,7 @@ function renderPostItem(post) {
         <div id="commentsBox-${post.id}" class="post-commentsection"></div>
         
     
-        <div class="comment-bar">
+        <div id="commentBar" class="comment-bar">
             <img class="commentbar-avatar" src="./assets/Bessie Cooper.png" alt="">
             <div class="commentbar-inputfield">
                 <div class="commentbar-inputfield-frame">
@@ -293,31 +317,33 @@ function renderPostItem(post) {
                     id="commentInput-${post.id}" type="text" placeholder="Write a comment.." class="commentbar-inputfield-frame-textbox">
                     </input>
                 </div>
-                <div onclick="getCommentValue(${post.id})" id="commentButton-${post.id}" class="comment-button-shaded">
-                    <div class="comment-post">
-                    Post
+                <div id="cancelButtonContainer-${post.id}"></div>
+                <div id="commentButtonContainer-${post.id}">
+                    <div onclick="getCommentBarValue(${post.id})" id="commentButton-${post.id}" class="comment-button-shaded">
+                        <div id="commentButtonText-${post.id}" class="comment-post">
+                        Post
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     `
-
     return postItem;
 }
 // Add this after "lines" in postItems to generate comments with posts at the same time
 // postItem += `<div id="commentsbox" class="post-commentsection">`
-    // post.comments.forEach(comment => {
-    //     postItem += renderCommentItem(comment)
-    // })
-    // postItem += `</div>`
+// post.comments.forEach(comment => {
+//     postItem += renderCommentItem(comment)
+// })
+// postItem += `</div>`
 
-    // postItem += `
+// postItem += `
 
 // onblur="getCommentValue(${post.postid})"4
 function onfocusCommentBar(id) {
-    var idVal = document.getElementById("commentInput-"+id)
-    idVal.classList.replace("commentbar-inputfield-frame-textbox","commentbar-inputfield-frame-textbox-focused")
+    var idVal = document.getElementById("commentInput-" + id)
+    idVal.classList.replace("commentbar-inputfield-frame-textbox", "commentbar-inputfield-frame-textbox-focused")
     var element = document.getElementById("commentButton-" + id);
     element.classList.replace("comment-button-shaded", "comment-button");
 }
@@ -331,97 +357,155 @@ function onfocusCommentBar(id) {
 //     console.log("happened");
 // }
 
-function editMyComment(postId,commentId) {
-    console.log("happened");
-    const commentBar = document.getElementById("commentInput-"+postId)
-    commentBar.value = listPost[postId-1].comments[commentId-1]
-}
-
 function onblurCommentBar(id) {
     var element = document.getElementById("commentButton-" + id);
     element.classList.replace("comment-button", "comment-button-shaded");
 }
 
 function renderComments() {
-    listPost.forEach(post =>
-        {const commentsBlock = document.querySelector("#commentsBox-"+post.id)
+    listPost.forEach(post => {
+        const commentsBlock = document.querySelector("#commentsBox-" + post.id)
         let commentItem = ''
-        console.log(post.id)
         post.comments.forEach(comment => {
-        commentItem += renderCommentItem(comment)
-        commentsBlock.innerHTML = commentItem;
-    })}
+            commentItem += renderCommentItem(comment)
+            console.log(userList[comment.userid-1].avatar);
+            commentsBlock.innerHTML = commentItem;
+        })
+    }
     )
 }
 
-function commentActionAppear(postId,commentId) {
-    // console.log("happened");
-    const commentAction = document.getElementById("commentAction-"+postId+"-"+commentId)
-    let actionButtons = 
-    `
-    <div class="post-comment-action">
-            <button onclick="editMyComment(1,1)" id="editComment" class="post-comment-action-block">
-              <img style='height: 100%; width: 100%; object-fit: contain' src="./assets/pen.png" alt="">
-            </button>
-            <button id="deleteComment" class="post-comment-action-block">
-              <img style='height: 100%; width: 100%; object-fit: contain' src="./assets/trash.png" alt="">
-            </button>
-          </div>
-    `
-    // if (name == userInfo.username) {
-    //     commentAction.innerHTML = actionButtons
-    //     const comment = document.getElementById("postComment-"+postId+"-"+commentId)
-    //     comment.addEventListener("mouseleave", (event) => {commentAction.innerHTML = ``}, false)
-    // }
-    commentAction.innerHTML = actionButtons
-    const comment = document.getElementById("postComment-"+postId+"-"+commentId)
-    comment.addEventListener("mouseleave", (event) => {commentAction.innerHTML = ``}, false)
-    // CONFIGURE ADDEVENTLISTENER ALSO FOR MOUSEENTER EVENT
-    const editButton = document.getElementById('deleteComment');
-
-    editButton.addEventListener('click', event => {
-    console.log('button clicked');
-});
-}
-
-
 function renderCommentItem(comment) {
+    if (userList[comment.userid-1].user) {
+        console.log("user");
+        return `
+            <div id="postComment-${comment.postid}-${comment.id}" class="post-comment" 
+            >
+              <img class="comment-avatar" src="${userList[comment.userid-1].avatar}" alt="">
+              <div>
+                <div class="comment-info">
+                  <div class="post-name">${userList[comment.userid-1].username}</div>
+                  <div class="comment-time">${comment.time} minutes ago</div>
+                </div>
+                <div class="comment-text">${comment.content}</div>
+              </div>
+              <div class= "post-comment-whitespace"></div>
+              <div id="commentAction-${comment.postid}-${comment.id}" class="user-comment-action">
+                <div class="post-user-comment-action">
+                    <button onclick="editMyComment(${comment.postid},${comment.id})" id="editComment" class="post-comment-action-block">
+                    <img style='height: 100%; width: 100%; object-fit: contain' src="./assets/pen.png" alt="">
+                </button>
+                <button onclick="deleteComment(${comment.postid},${comment.id})" id="deleteComment" class="post-comment-action-block">
+                    <img style='height: 100%; width: 100%; object-fit: contain' src="./assets/trash.png" alt="">
+                </button>
+                </div>
+              </div>
+            </div>
+        `
+    }
+    else{
+        console.log("not user");
     return `
-    <div id="postComment-${comment.postid}-${comment.id}" class="post-comment" 
-    onmouseover="commentActionAppear(${comment.postid},${comment.id})">
-      <img class="comment-avatar" src="${comment.avatar}" alt="">
-      <div>
-        <div class="comment-info">
-          <div class="post-name">${comment.name}</div>
-          <div class="comment-time">${comment.time} minutes ago</div>
+        <div id="postComment-${comment.postid}-${comment.id}" class="post-comment" 
+        >
+          <img class="comment-avatar" src="${userList[comment.userid-1].avatar}" alt="">
+          <div>
+            <div class="comment-info">
+              <div class="post-name">${userList[comment.userid-1].username}</div>
+              <div class="comment-time">${comment.time} minutes ago</div>
+            </div>
+            <div class="comment-text">${comment.content}</div>
+          </div>
+          <div class= "post-comment-whitespace"></div>
+          <div id="commentAction-${comment.postid}-${comment.id}" class="user-comment-action">
+          </div>
         </div>
-        <div class="comment-text">${comment.content}</div>
-      </div>
-      <div class= "post-comment-whitespace"></div>
-      <div id="commentAction-${comment.postid}-${comment.id}">
-      </div>
-    </div>
-    `
+        `
+    }
 }
 
-function renderNewCommentItem(val,id){
-    listPost[id-1].comments.push(
-    {
-        postid: id,
-        id: listPost[id-1].comments[listPost[id-1].comments.length - 1].id + 1,
-        avatar: "./assets/"+userInfo.img,
-        name: userInfo.username,
-        time: 0,
-        content: val
-    })
-    clearText("commentInput-"+listPost[id-1].id)
+function renderNewCommentItem(val, id) {
+    listPost[id - 1].comments.push(
+        {
+            postid: id,
+            id: listPost[id - 1].comments[listPost[id - 1].comments.length - 1].id + 1,
+            avatar: "./assets/" + userInfo.img,
+            name: userInfo.username,
+            time: 0,
+            content: val
+        })
+    clearText("commentInput-" + listPost[id - 1].id)
     renderComments();
 }
 
-function getCommentValue(id) {
-    const idj = "commentInput-"+id
+function getCommentBarValue(id) {
+    const idj = "commentInput-" + id
     const val = document.getElementById(idj).value
-    renderNewCommentItem(val,id)
+    const button = document.getElementById("commentButtonText-" + id).innerText
+    if (button == "Post") {
+        renderNewCommentItem(val, id)
+    }
+    else if (button == "Edit") {
+        return val;
+    }
+}
+
+function editMyComment(postId, commentId) {
+    const commentBar = document.getElementById("commentInput-" + postId)
+    commentBar.value = listPost[postId - 1].comments[commentId - 1].content
+    const cancelButton = document.getElementById("cancelButtonContainer-" + postId)
+    const editButton = document.getElementById("commentButtonContainer-" + postId)
+    cancelButton.innerHTML = `
+    <div onclick="handleCancelButton(${postId})" id="cancelButton-${postId}" class="cancel-button">
+        <div id="cancelButtonText-${postId}" class="cancel-button-text">
+            Cancel
+        </div>
+    </div>
+    `
+    editButton.innerHTML = `
+    <div onclick="handleEditButton(${postId},${commentId})" id="commentButton-${postId}" class="comment-button-shaded">
+        <div id="commentButtonText-${postId}" class="comment-post">
+        Edit
+        </div>
+    </div>
+    `
+    commentBar.focus();
+}
+
+function handleEditButton(postId, commentId) {
+    listPost[postId - 1].comments[commentId - 1].content = getCommentBarValue(postId);
+    clearText("commentInput-" + postId)
+    const editButton = document.getElementById("commentButtonContainer-" + postId)
+    const cancelButton = document.getElementById("cancelButtonContainer-" + postId)
+    cancelButton.innerHTML = ``
+    editButton.innerHTML = `
+    <div onclick="getCommentBarValue(${postId})" id="commentButton-${postId}" class="comment-button-shaded">
+        <div id="commentButtonText-${postId}" class="comment-post">
+            Post
+        </div>
+    </div>
+    `
+    renderComments();
+}
+
+function handleCancelButton(postId) {
+    clearText("commentInput-" + postId)
+    const editButton = document.getElementById("commentButtonContainer-" + postId)
+    const cancelButton = document.getElementById("cancelButtonContainer-" + postId)
+    cancelButton.innerHTML = ``
+    editButton.innerHTML = `
+    <div onclick="getCommentBarValue(${postId})" id="commentButton-${postId}" class="comment-button-shaded">
+        <div id="commentButtonText-${postId}" class="comment-post">
+            Post
+        </div>
+    </div>
+    `
+    renderComments();
+}
+
+function deleteComment(postId, commentId) {
+    listPost[postId - 1].comments.splice(commentId - 1, 1);
+    renderComments();
 }
 
 function clearText(id) {
