@@ -368,64 +368,82 @@ function generateImages(postId) {
             `
         }
     )
+    txts = `
+    <div class="slide">
+        <img class="post-img" src="${listPost[postId - 1].img[listPost[postId - 1].img.length-1]}" alt="">
+    </div>` + txts
+    txts += `<div class="slide">
+    <img class="post-img" src="${listPost[postId - 1].img[0]}" alt="">
+    </div>`
     console.log("txts: " + txts);
     container = document.getElementById("postImgContainer-" + postId)
     listImgs = document.querySelector(".list-imgs")
     listImgs.innerHTML += txts
-    container.innerHTML += `<img onclick="nextSlide()" class="next" src="./assets/imgMoveRight.png" alt="">
-    <img onclick="prevSlide()" class="prev" src="./assets/imgMoveLeft.png" alt="">`
+    container.innerHTML += `
+    <img onclick="nextSlide()" class="next" src="./assets/imgMoveRight.png" alt="">
+    <img onclick="prevSlide()" class="prev" src="./assets/imgMoveLeft.png" alt="">
+    <div class="post-dotslider" id="dotSlider-${postId}"></div>
+    `
 }
 
-function handleTransitionEnd(){
-    console.log("executed");
-    slidesList.style.transition = `none`
-    slidesList.style.transform = `translateX(0px)`;
-    slidesList.removeChild(slidesList.lastChild)
+function handleTransitionEnd() {
+    console.log(currentSlide);
+    let slides = document.querySelectorAll(".slide");
+    if (currentSlide == slides.length - 1) {
+        slidesList.style.transition = `none`
+        slidesList.style.transform = `translateX(-620.99px)`;
+        currentSlide = 1;
+        console.log("executed transition end - end");
+    }
+    else if (currentSlide == 0) {
+        slidesList.style.transition = `none`
+        slidesList.style.transform = `translateX(-${(slides.length-2)*620.99}px)`;
+        currentSlide = slides.length - 2;
+        console.log("executed transition end - start");
+    }
+    // console.log("executed");
 }
 
 function showSlide(index) {
+
     // slides.forEach((slide, i) => {
     // const slideWidth = slide.clientWidth;
     // slide.style.transform = `translateX(-${index * slideWidth}px)`;
     // });
-    if (index == 999) {
-        slidesList.style.transform = `translateX(-${(slidesList.length - 1) * 620.99}px)`;
-    }
-    if (flag == true) {
-        flag = false;
-        console.log("got in it");
+    if (imgEndFlag == true) {
+        imgEndFlag = false;
+        console.log("got in img end");
         console.log(slidesList.lastChild);
         slidesList.style.transform = `translateX(-${currentSlide * 620.99}px)`;
-        slidesList.addEventListener("transitionend", (event) => {
-            handleTransitionEnd();
-        });
-        currentSlide = 0;
-        // slidesList.style.transition = `transform 1s ease`
         console.log(slidesList.style.transition);
-        // slidesList.style.transform = `translateX(-${currentSlide * 620.99}px)`;
     }
+    else if (imgStartFlag == true) {
+        imgStartFlag = false;
+        console.log("got in img start");
+        slidesList.style.transform = `translateX(-${(slides.length-1) * 620.99}px)`;
+    } 
     else {
         slidesList.style.transform = `translateX(-${currentSlide * 620.99}px)`;
     }
-    slidesList.removeEventListener("transitionend", handleTransitionEnd)
-    console.log(currentSlide);
 }
 
-var flag = false;
+function renderSlider(){
+    
+}
+
+var imgEndFlag = false;
+var imgStartFlag = false;
 
 function nextSlide() {
     console.log("nextSlide()");
     firstElement = slidesList.firstChild
     slidesList.style.transition = `transform 1s ease`;
-    if (currentSlide == slides.length - 2 && flag == false) {
+    if (currentSlide == slides.length - 2 && imgEndFlag == false) {
         console.log("reached the end");
-        slidesList.innerHTML += `<div class="slide">
-                <img class="post-img" src="./assets/Rectangle 2.png" alt="">
-            </div>`;
         slides = document.querySelectorAll(".slide");
         currentSlide += 1;
         showSlide(currentSlide)
-        flag = true;
+        imgEndFlag = true;
     }
     else {
         console.log("default situation");
@@ -435,16 +453,14 @@ function nextSlide() {
 }
 
 function prevSlide() {
-    console.log("prevSlide()");
-    if (currentSlide == 0) {
+    console.log("prevSlide()") + currentSlide;
+    slidesList.style.transition = `transform 1s ease`;
+    if (currentSlide == 0 && imgStartFlag == false) {
         console.log("at the start");
-        // slidesList.innerHTML.prepend(slidesList.innerHTML);
-        currentSlide = slides.length - 1;
+        currentSlide -= 1;
         // slidesList.innerHTML += slidesList.innerHTML
-        slidesList.insertBefore(slidesList, slidesList.firstChild);
-        slides = document.querySelectorAll(".slide");
-        currentSlide = 2;
-        slidesList.style.transform = `translateX(-${currentSlide * 620.99}px)`;
+        showSlide(currentSlide)
+        imgStartFlag = true;
     }
     else {
         currentSlide = (currentSlide - 1 + slides.length) % slides.length;
@@ -654,9 +670,14 @@ function renderApp() {
 renderApp()
 
 var slides = document.querySelectorAll(".slide");
-let currentSlide = 0;
+let currentSlide = 1;
 const slidesList = document.querySelector(".list-imgs")
-// showSlide(currentSlide)
+
+slidesList.addEventListener("transitionend", (event) => {
+    handleTransitionEnd();
+});
+
+showSlide(currentSlide)
 
 // document.querySelector(".commentbar-inputfield-frame-textbox").addEventListener('focus', changeClassCommentShaded);
 // document.querySelector(".commentbar-inputfield-frame-textbox").addEventListener('focusout', changeClassComment);

@@ -263,6 +263,7 @@ body {
     justify-content: center;
     border-top: 1px solid #E5E5E5;
     border-left: 1px solid #E5E5E5;
+    height: -webkit-fill-available;
 }
 
 .content-body {
