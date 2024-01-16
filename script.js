@@ -38,32 +38,34 @@ const userList = [
     }
 ]
 
-console.log(userInfo);
-
 var activeSideBarId = 2
 
 const sidebarItems1 = [
     {
         id: 1,
-        icon: "./assets/siren-on.svg",
+        icon: "siren-on",
+        iconactive: "./assets/siren-on-active.svg",
         label: "News",
         notiCount: 12
     },
     {
         id: 2,
-        icon: "./assets/chalkboard.svg",
+        icon: "chalkboard",
+        iconactive: "./assets/chalkboard-active.svg",
         label: "Technology",
         notiCount: 12
     },
     {
         id: 3,
-        icon: "./assets/play.svg",
+        icon: "play",
+        iconactive: "./assets/play-active.svg",
         label: "Music",
         notiCount: 0
     },
     {
         id: 4,
-        icon: "./assets/comment-alt.svg",
+        icon: "comment-alt",
+        iconactive: "./assets/comment-alt-active.svg",
         label: "Feedback",
         notiCount: 100
     }
@@ -72,7 +74,8 @@ var sidebarlastElementId = sidebarItems1[sidebarItems1.length - 1].id + 1
 const sidebarItems2 = [
     {
         id: sidebarlastElementId,
-        icon: "./assets/clipboard-check.svg",
+        icon: "clipboard-check",
+        iconactive: "./assets/clipboard-check-active.svg",
         label: "Survey",
         notiCount: 12
     }
@@ -83,80 +86,86 @@ const listPost = [
         id: 1,
         userid: 5,
         time: 15,
-        content: "Search input is a must have of almost all apps. In this cheatsheet you can get inspiration on 6 variants of this component. Which one is your favorite?",
+        content: "Search input is a must have of almost all apps. In this cheatsheet you can get inspiration on 6 variants of this component. Đã bao lâu chẳng thể nói được 1 lời Trip hơi sâu nhưng chắc, đấy mới là cuộc đời Dù chuyện chẳng đâu vào đâu nhưng em vẫn cố phải cười Mặc kệ giọng nói rầm rì ở trong tai Em vẫn biết từ đầu Rằng mình vốn không thuộc về nhau Nhưng khi bầu trời chuyển tối em vẫn luôn ở đấy",
         reactions: 41,
-        commentCount: 32,
-        img: "./assets/Rectangle 2.svg",
+        img: ["./assets/Rectangle 2.png", "./assets/Rectangle 1.png", "./assets/Rectangle 3.png"],
         comments: [
             {
                 postid: 1,
                 id: 1,
                 userid: 1,
                 time: 15,
-                content: "Soo great!!!"
+                content: "Soo great!!!",
+                isedited: false
             },
             {
                 postid: 1,
                 id: 2,
                 userid: 2,
                 time: 30,
-                content: "Still doing this man"
+                content: "Still doing this man",
+                isedited: true
             },
             {
                 postid: 1,
                 id: 3,
                 userid: 3,
                 time: 40,
-                content: "Still doing this man"
+                content: "Still doing this man",
+                isedited: false
             },
             {
                 postid: 1,
                 id: 4,
                 userid: 4,
                 time: 60,
-                content: "Great choice of Acronym AF1's"
-            },
-        ]
+                content: "Great choice of Acronym AF1's",
+                isedited: false
+            }
+        ],
     },
-    {
-        id: 2,
-        userid: 5,
-        time: 15,
-        content: "Search input is a must have of almost all apps. In this cheatsheet you can get inspiration on 6 variants of this component. Which one is your favorite?",
-        reactions: 41,
-        commentCount: 32,
-        img: "./assets/Rectangle 2.svg",
-        comments: [
-            {
-                postid: 2,
-                id: 1,
-                userid: 1,
-                time: 15,
-                content: "Soo great!!!"
-            },
-            {
-                postid: 2,
-                id: 2,
-                userid: 2,
-                time: 30,
-                content: "Still doing this man"
-            },
-            {
-                postid: 2,
-                id: 3,
-                userid: 3,
-                time: 40,
-                content: "Still doing this man"
-            },
-            {
-                postid: 2,
-                id: 4,
-                userid: 4,
-                time: 60,
-                content: "Great choice of Acronym AF1's"
-            },
-        ]
-    },
+    // {
+    //     id: 2,
+    //     userid: 5,
+    //     time: 15,
+    //     content: "Search input is a must have of almost all apps. In this cheatsheet you can get inspiration on 6 variants of this component. Which one is your favorite?",
+    //     reactions: 41,
+    //     img: ["./assets/Rectangle 2.png", "./assets/Rectangle 1.png", "./assets/Rectangle 3.png"],
+    //     comments: [
+    //         {
+    //             postid: 2,
+    //             id: 1,
+    //             userid: 1,
+    //             time: 15,
+    //             content: "Soo great!!!",
+    //             isedited: false
+    //         },
+    //         {
+    //             postid: 2,
+    //             id: 2,
+    //             userid: 2,
+    //             time: 30,
+    //             content: "Still doing this man",
+    //             isedited: false
+    //         },
+    //         {
+    //             postid: 2,
+    //             id: 3,
+    //             userid: 3,
+    //             time: 40,
+    //             content: "Still doing this man",
+    //             isedited: false
+    //         },
+    //         {
+    //             postid: 2,
+    //             id: 4,
+    //             userid: 4,
+    //             time: 60,
+    //             content: "Great choice of Acronym AF1's",
+    //             isedited: false
+    //         },
+    //     ]
+    // },
 
 ]
 
@@ -212,11 +221,12 @@ function renderSideBarItem(item, isActive) {
     if (item.notiCount > 99) {
         item.notiCount = "99+"
     }
-    if (item.notiCount < 1) {
+    if (item.notiCount < 1 | isActive) {
+        item.notiCount = 0;
         return `
         <div class="block-heading${isActive ? "-chosen" : ''}" onclick="handleClickSideBarItem(${item.id})">
         <div class="icon-action">
-          <img src="${item.icon}" alt="">
+          <img src="./assets/${item.icon}${isActive ? "-active" : ''}.svg" alt="">
         </div>
         <div class="heading${isActive ? "-chosen" : ''}">
         ${item.label}
@@ -224,10 +234,10 @@ function renderSideBarItem(item, isActive) {
         </div>
         `
     }
-    return `
+    return ` 
     <div class="block-heading${isActive ? "-chosen" : ''}" onclick="handleClickSideBarItem(${item.id})">
         <div class="icon-action">
-          <img src="${item.icon}" alt="">
+          <img src="./assets/${item.icon}${isActive ? "-active" : ''}.svg" alt="">
         </div>
         <div class="heading${isActive ? "-chosen" : ''}">
         ${item.label}
@@ -263,10 +273,20 @@ function renderPosts() {
     const postBlock = document.querySelector("#postBlocks")
     let postItem = ''
     listPost.forEach(post => {
-        postItem += renderPostItem(post)
+        postItem = renderPostItem(post)
+        postBlock.innerHTML += postItem;
+        generateImages(post.id);
     })
-    console.log(postBlock);
-    postBlock.innerHTML = postItem;
+    
+    // checkPostTextLength()
+}
+
+function checkPostTextLength() {
+    listPost.forEach(post => {
+        if (document.getElementById("postText-" + post.id).style.height < "3.6em") {
+            document.getElementById("postLink-" + post.id).innerText = ''
+        }
+    })
 }
 
 function renderPostItem(post) {
@@ -276,9 +296,9 @@ function renderPostItem(post) {
         <div class="post-heading">
             <div class="info-action">
                 <div class="user-info">
-                    <img class="post-avatar" src="${userList[post.userid-1].avatar}" alt="">
+                    <img class="post-avatar" src="${userList[post.userid - 1].avatar}" alt="">
                     <div class="name-time">
-                        <div class="post-name">${userList[post.userid-1].username}</div>
+                        <div class="post-name">${userList[post.userid - 1].username}</div>
                         <div class="post-time">${post.time} minutes ago</div>
                     </div>
                 </div>
@@ -286,21 +306,24 @@ function renderPostItem(post) {
                 <img class="post-action-button" src="./assets/Button Action (1).svg" alt="">
                 <img class="post-action-button" src="./assets/Button Action (2).svg" alt="">
             </div>
-            <p class="post-text">${post.content}</p>
-            <p class="post-link">View more..</p>
+            <p id="postText-${post.id}" class="post-text-shortened">${post.content}</p>
+            <p id="postLink-${post.id}" onclick="handleViewMore(${post.id})" class="post-link">View more..</p>
         </div>
-        <img class="post-img" src="${post.img}" alt="">
+        <div id="postImgContainer-${post.id}" class="post-img-container">
+            
+        </div>
+        
         <div class="post-action">
             <div class="post-add-action">
                 <img class="post-reaction-button" src="./assets/smile.svg" alt="">
                 <div class="post-comment-reaction-count-textstyle">
-                ${post.reactions} Reactions
+                ${post.reactions} ${post.reactions > 1 ? "Reactions" : "Reaction"}
                 </div>
             </div>
             <div class="post-add-action">
-                <img class="post-reaction-button" src="./assets/comment-alt.svg" alt="">
+                <img class="post-reaction-button" src="./assets/comment-alt-post.svg" alt="">
                 <div class="post-comment-reaction-count-textstyle">
-                ${post.commentCount} comments
+                ${post.comments.length} ${post.comments.length > 1 ? "Comments" : "Comment"}
                 </div>
             </div>
         </div>
@@ -331,6 +354,66 @@ function renderPostItem(post) {
     `
     return postItem;
 }
+
+{/* <img onclick="nextSlide()" class="next" src="./assets/imgMoveRight.png" alt="">
+            <img onclick="prevSlide()" class="prev" src="./assets/imgMoveLeft.png" alt=""></img> */}
+
+function generateImages(postId) {
+    let txts = ''
+    listPost[postId - 1].img.forEach(
+        imgs => {
+            txts += `
+            <div class="slide">
+                <img class="post-img" src="${imgs}" alt="">
+            </div>
+            `
+        }
+    )
+    console.log("txts: " + txts);
+    container = document.getElementById("postImgContainer-" + postId) 
+    container.innerHTML += txts
+    container.innerHTML += `<img onclick="nextSlide()" class="next" src="./assets/imgMoveRight.png" alt="">
+    <img onclick="prevSlide()" class="prev" src="./assets/imgMoveLeft.png" alt="">`
+}
+
+function showSlides(index) {
+    console.log("Yes");
+    console.log(slides);
+    slides.forEach((slide, i) => {
+        console.log(i);
+        const slideWidth = slide.clientWidth;
+        slide.style.transform = `translateX(-${index * slideWidth}px)`;
+    });
+}
+
+function showSlide(index) {
+    slides.forEach((slide, i) => {
+      const slideWidth = slide.clientWidth;
+      slide.style.transform = `translateX(-${index * slideWidth}px)`;
+    });
+}
+
+function nextSlide() {
+    console.log("nextSlide()");
+    currentSlide = (currentSlide + 1) % slides.length;
+    showSlide(currentSlide);
+}
+
+function prevSlide() {
+    console.log("prevSlide()");
+    currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+    showSlide(currentSlide);
+}
+
+function handleViewMore(postId) {
+    console.log("LOL");
+    const element = document.getElementById("postText-" + postId)
+    element.classList.toggle("post-text-shortened");
+    element.classList.toggle("post-text-full")
+    document.getElementById("postLink").innerText = "See less"
+    renderPosts();
+}
+
 // Add this after "lines" in postItems to generate comments with posts at the same time
 // postItem += `<div id="commentsbox" class="post-commentsection">`
 // post.comments.forEach(comment => {
@@ -368,7 +451,6 @@ function renderComments() {
         let commentItem = ''
         post.comments.forEach(comment => {
             commentItem += renderCommentItem(comment)
-            console.log(userList[comment.userid-1].avatar);
             commentsBlock.innerHTML = commentItem;
         })
     }
@@ -376,16 +458,15 @@ function renderComments() {
 }
 
 function renderCommentItem(comment) {
-    if (userList[comment.userid-1].user) {
-        console.log("user");
+    if (userList[comment.userid - 1].user) {
         return `
             <div id="postComment-${comment.postid}-${comment.id}" class="post-comment" 
             >
-              <img class="comment-avatar" src="${userList[comment.userid-1].avatar}" alt="">
+              <img class="comment-avatar" src="${userList[comment.userid - 1].avatar}" alt="">
               <div>
                 <div class="comment-info">
-                  <div class="post-name">${userList[comment.userid-1].username}</div>
-                  <div class="comment-time">${comment.time} minutes ago</div>
+                  <div class="post-name">${userList[comment.userid - 1].username}</div>
+                  <div class="comment-time">${comment.isedited ? comment.time + " minutes ago (edited)" : comment.time + " minutes ago"}</div>
                 </div>
                 <div class="comment-text">${comment.content}</div>
               </div>
@@ -403,16 +484,15 @@ function renderCommentItem(comment) {
             </div>
         `
     }
-    else{
-        console.log("not user");
-    return `
+    else {
+        return `
         <div id="postComment-${comment.postid}-${comment.id}" class="post-comment" 
         >
-          <img class="comment-avatar" src="${userList[comment.userid-1].avatar}" alt="">
+          <img class="comment-avatar" src="${userList[comment.userid - 1].avatar}" alt="">
           <div>
             <div class="comment-info">
-              <div class="post-name">${userList[comment.userid-1].username}</div>
-              <div class="comment-time">${comment.time} minutes ago</div>
+              <div class="post-name">${userList[comment.userid - 1].username}</div>
+              <div class="comment-time">${comment.isedited ? comment.time + " minutes ago (edited)" : comment.time + " minutes ago"}</div>
             </div>
             <div class="comment-text">${comment.content}</div>
           </div>
@@ -429,13 +509,16 @@ function renderNewCommentItem(val, id) {
         {
             postid: id,
             id: listPost[id - 1].comments[listPost[id - 1].comments.length - 1].id + 1,
-            avatar: "./assets/" + userInfo.img,
-            name: userInfo.username,
+            userid: 1,
+            user: true,
+            // avatar: "./assets/" + userInfo.img,
+            // name: userInfo.username,
             time: 0,
             content: val
         })
     clearText("commentInput-" + listPost[id - 1].id)
     renderComments();
+    renderPosts();
 }
 
 function getCommentBarValue(id) {
@@ -474,6 +557,7 @@ function editMyComment(postId, commentId) {
 
 function handleEditButton(postId, commentId) {
     listPost[postId - 1].comments[commentId - 1].content = getCommentBarValue(postId);
+    listPost[postId - 1].comments[commentId - 1].isedited = true;
     clearText("commentInput-" + postId)
     const editButton = document.getElementById("commentButtonContainer-" + postId)
     const cancelButton = document.getElementById("cancelButtonContainer-" + postId)
@@ -522,6 +606,9 @@ function renderApp() {
 
 renderApp()
 
+const slides = document.querySelectorAll(".slide");
+let currentSlide = 0;
+showSlides(currentSlide)
 
 // document.querySelector(".commentbar-inputfield-frame-textbox").addEventListener('focus', changeClassCommentShaded);
 // document.querySelector(".commentbar-inputfield-frame-textbox").addEventListener('focusout', changeClassComment);
