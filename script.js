@@ -277,7 +277,7 @@ function renderPosts() {
         postBlock.innerHTML += postItem;
         generateImages(post.id);
     })
-    
+
     // checkPostTextLength()
 }
 
@@ -310,7 +310,9 @@ function renderPostItem(post) {
             <p id="postLink-${post.id}" onclick="handleViewMore(${post.id})" class="post-link">View more..</p>
         </div>
         <div id="postImgContainer-${post.id}" class="post-img-container">
-            
+            <div class="list-imgs">
+
+            </div>
         </div>
         
         <div class="post-action">
@@ -355,9 +357,6 @@ function renderPostItem(post) {
     return postItem;
 }
 
-{/* <img onclick="nextSlide()" class="next" src="./assets/imgMoveRight.png" alt="">
-            <img onclick="prevSlide()" class="prev" src="./assets/imgMoveLeft.png" alt=""></img> */}
-
 function generateImages(postId) {
     let txts = ''
     listPost[postId - 1].img.forEach(
@@ -370,39 +369,87 @@ function generateImages(postId) {
         }
     )
     console.log("txts: " + txts);
-    container = document.getElementById("postImgContainer-" + postId) 
-    container.innerHTML += txts
+    container = document.getElementById("postImgContainer-" + postId)
+    listImgs = document.querySelector(".list-imgs")
+    listImgs.innerHTML += txts
     container.innerHTML += `<img onclick="nextSlide()" class="next" src="./assets/imgMoveRight.png" alt="">
     <img onclick="prevSlide()" class="prev" src="./assets/imgMoveLeft.png" alt="">`
 }
 
-function showSlides(index) {
-    console.log("Yes");
-    console.log(slides);
-    slides.forEach((slide, i) => {
-        console.log(i);
-        const slideWidth = slide.clientWidth;
-        slide.style.transform = `translateX(-${index * slideWidth}px)`;
-    });
+function handleTransitionEnd(){
+    console.log("executed");
+    slidesList.style.transition = `none`
+    slidesList.style.transform = `translateX(0px)`;
+    slidesList.removeChild(slidesList.lastChild)
 }
 
 function showSlide(index) {
-    slides.forEach((slide, i) => {
-      const slideWidth = slide.clientWidth;
-      slide.style.transform = `translateX(-${index * slideWidth}px)`;
-    });
+    // slides.forEach((slide, i) => {
+    // const slideWidth = slide.clientWidth;
+    // slide.style.transform = `translateX(-${index * slideWidth}px)`;
+    // });
+    if (index == 999) {
+        slidesList.style.transform = `translateX(-${(slidesList.length - 1) * 620.99}px)`;
+    }
+    if (flag == true) {
+        flag = false;
+        console.log("got in it");
+        console.log(slidesList.lastChild);
+        slidesList.style.transform = `translateX(-${currentSlide * 620.99}px)`;
+        slidesList.addEventListener("transitionend", (event) => {
+            handleTransitionEnd();
+        });
+        currentSlide = 0;
+        // slidesList.style.transition = `transform 1s ease`
+        console.log(slidesList.style.transition);
+        // slidesList.style.transform = `translateX(-${currentSlide * 620.99}px)`;
+    }
+    else {
+        slidesList.style.transform = `translateX(-${currentSlide * 620.99}px)`;
+    }
+    slidesList.removeEventListener("transitionend", handleTransitionEnd)
+    console.log(currentSlide);
 }
+
+var flag = false;
 
 function nextSlide() {
     console.log("nextSlide()");
-    currentSlide = (currentSlide + 1) % slides.length;
-    showSlide(currentSlide);
+    firstElement = slidesList.firstChild
+    slidesList.style.transition = `transform 1s ease`;
+    if (currentSlide == slides.length - 2 && flag == false) {
+        console.log("reached the end");
+        slidesList.innerHTML += `<div class="slide">
+                <img class="post-img" src="./assets/Rectangle 2.png" alt="">
+            </div>`;
+        slides = document.querySelectorAll(".slide");
+        currentSlide += 1;
+        showSlide(currentSlide)
+        flag = true;
+    }
+    else {
+        console.log("default situation");
+        currentSlide = (currentSlide + 1) % slides.length;
+        showSlide(currentSlide);
+    }
 }
 
 function prevSlide() {
     console.log("prevSlide()");
-    currentSlide = (currentSlide - 1 + slides.length) % slides.length;
-    showSlide(currentSlide);
+    if (currentSlide == 0) {
+        console.log("at the start");
+        // slidesList.innerHTML.prepend(slidesList.innerHTML);
+        currentSlide = slides.length - 1;
+        // slidesList.innerHTML += slidesList.innerHTML
+        slidesList.insertBefore(slidesList, slidesList.firstChild);
+        slides = document.querySelectorAll(".slide");
+        currentSlide = 2;
+        slidesList.style.transform = `translateX(-${currentSlide * 620.99}px)`;
+    }
+    else {
+        currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+        showSlide(currentSlide);
+    }
 }
 
 function handleViewMore(postId) {
@@ -606,9 +653,10 @@ function renderApp() {
 
 renderApp()
 
-const slides = document.querySelectorAll(".slide");
+var slides = document.querySelectorAll(".slide");
 let currentSlide = 0;
-showSlides(currentSlide)
+const slidesList = document.querySelector(".list-imgs")
+// showSlide(currentSlide)
 
 // document.querySelector(".commentbar-inputfield-frame-textbox").addEventListener('focus', changeClassCommentShaded);
 // document.querySelector(".commentbar-inputfield-frame-textbox").addEventListener('focusout', changeClassComment);
