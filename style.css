@@ -434,10 +434,22 @@ body {
 .post-img {}
 
 .post-dotslider {
-    position: relative;
+    position: absolute;
     display: inline-flex;
     align-items: flex-start;
     gap: 8px;
+    /* background-color: #f8f8f8; */
+    width: 72px;
+    height: 8px;
+    left: 45%;
+    bottom: 16px;
+}
+
+.post-dot {
+    height: auto;
+    width: auto;
+    opacity: 0.4;
+    cursor: pointer;
 }
 
 .prev,

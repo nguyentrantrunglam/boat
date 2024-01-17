@@ -88,7 +88,10 @@ const listPost = [
         time: 15,
         content: "Search input is a must have of almost all apps. In this cheatsheet you can get inspiration on 6 variants of this component. Đã bao lâu chẳng thể nói được 1 lời Trip hơi sâu nhưng chắc, đấy mới là cuộc đời Dù chuyện chẳng đâu vào đâu nhưng em vẫn cố phải cười Mặc kệ giọng nói rầm rì ở trong tai Em vẫn biết từ đầu Rằng mình vốn không thuộc về nhau Nhưng khi bầu trời chuyển tối em vẫn luôn ở đấy",
         reactions: 41,
-        img: ["./assets/Rectangle 2.png", "./assets/Rectangle 1.png", "./assets/Rectangle 3.png"],
+        img: ["./assets/Rectangle 2.png", "./assets/Rectangle 1.png", "./assets/Rectangle 3.png", "./assets/Rectangle 4.png"],
+        currentSlide: 1,
+        imgEndFlag: false,
+        imgStartFlag: false,
         comments: [
             {
                 postid: 1,
@@ -124,48 +127,51 @@ const listPost = [
             }
         ],
     },
-    // {
-    //     id: 2,
-    //     userid: 5,
-    //     time: 15,
-    //     content: "Search input is a must have of almost all apps. In this cheatsheet you can get inspiration on 6 variants of this component. Which one is your favorite?",
-    //     reactions: 41,
-    //     img: ["./assets/Rectangle 2.png", "./assets/Rectangle 1.png", "./assets/Rectangle 3.png"],
-    //     comments: [
-    //         {
-    //             postid: 2,
-    //             id: 1,
-    //             userid: 1,
-    //             time: 15,
-    //             content: "Soo great!!!",
-    //             isedited: false
-    //         },
-    //         {
-    //             postid: 2,
-    //             id: 2,
-    //             userid: 2,
-    //             time: 30,
-    //             content: "Still doing this man",
-    //             isedited: false
-    //         },
-    //         {
-    //             postid: 2,
-    //             id: 3,
-    //             userid: 3,
-    //             time: 40,
-    //             content: "Still doing this man",
-    //             isedited: false
-    //         },
-    //         {
-    //             postid: 2,
-    //             id: 4,
-    //             userid: 4,
-    //             time: 60,
-    //             content: "Great choice of Acronym AF1's",
-    //             isedited: false
-    //         },
-    //     ]
-    // },
+    {
+        id: 2,
+        userid: 5,
+        time: 15,
+        content: "Search input is a must have of almost all apps. In this cheatsheet you can get inspiration on 6 variants of this component. Which one is your favorite?",
+        reactions: 41,
+        img: ["./assets/Rectangle 2.png", "./assets/Rectangle 1.png", "./assets/Rectangle 3.png"],
+        currentSlide: 1,
+        imgEndFlag: false,
+        imgStartFlag: false,
+        comments: [
+            {
+                postid: 2,
+                id: 1,
+                userid: 1,
+                time: 15,
+                content: "Soo great!!!",
+                isedited: false
+            },
+            {
+                postid: 2,
+                id: 2,
+                userid: 2,
+                time: 30,
+                content: "Still doing this man",
+                isedited: false
+            },
+            {
+                postid: 2,
+                id: 3,
+                userid: 3,
+                time: 40,
+                content: "Still doing this man",
+                isedited: false
+            },
+            {
+                postid: 2,
+                id: 4,
+                userid: 4,
+                time: 60,
+                content: "Great choice of Acronym AF1's",
+                isedited: false
+            },
+        ]
+    },
 
 ]
 
@@ -276,6 +282,8 @@ function renderPosts() {
         postItem = renderPostItem(post)
         postBlock.innerHTML += postItem;
         generateImages(post.id);
+        showSlide(post.currentSlide, post.id)
+        showSlide(post.currentSlide, post.id)
     })
 
     // checkPostTextLength()
@@ -310,7 +318,7 @@ function renderPostItem(post) {
             <p id="postLink-${post.id}" onclick="handleViewMore(${post.id})" class="post-link">View more..</p>
         </div>
         <div id="postImgContainer-${post.id}" class="post-img-container">
-            <div class="list-imgs">
+            <div class="list-imgs" id="listImgs-${post.id}">
 
             </div>
         </div>
@@ -362,118 +370,148 @@ function generateImages(postId) {
     listPost[postId - 1].img.forEach(
         imgs => {
             txts += `
-            <div class="slide">
+            <div class="slide" id="slide-${postId}">
                 <img class="post-img" src="${imgs}" alt="">
             </div>
             `
         }
     )
     txts = `
-    <div class="slide">
-        <img class="post-img" src="${listPost[postId - 1].img[listPost[postId - 1].img.length-1]}" alt="">
+    <div class="slide" id="slide-${postId}">
+        <img class="post-img" src="${listPost[postId - 1].img[listPost[postId - 1].img.length - 1]}" alt="">
     </div>` + txts
-    txts += `<div class="slide">
+    txts += `<div class="slide" id="slide-${postId}">
     <img class="post-img" src="${listPost[postId - 1].img[0]}" alt="">
     </div>`
-    console.log("txts: " + txts);
     container = document.getElementById("postImgContainer-" + postId)
-    listImgs = document.querySelector(".list-imgs")
+    // listImgs = document.querySelector(".list-imgs")
+    listImgs = document.getElementById("listImgs-" + postId)
     listImgs.innerHTML += txts
     container.innerHTML += `
-    <img onclick="nextSlide()" class="next" src="./assets/imgMoveRight.png" alt="">
-    <img onclick="prevSlide()" class="prev" src="./assets/imgMoveLeft.png" alt="">
+    <img onclick="nextSlide(${postId})" class="next" src="./assets/imgMoveRight.png" alt="">
+    <img onclick="prevSlide(${postId})" class="prev" src="./assets/imgMoveLeft.png" alt="">
     <div class="post-dotslider" id="dotSlider-${postId}"></div>
     `
+    var dots = ''
+    for (let i = 0; i < listPost[postId - 1].img.length; i++) {
+        dots += `
+    <img onclick="handleDotClick(${postId},${i+1})" class="post-dot" id="postDot-${postId}-${i}" src="./assets/circle.png" alt="">
+        `
+    }
+    var postDotSlider = document.getElementById("dotSlider-" + postId)
+    postDotSlider.innerHTML += dots;
 }
 
-function handleTransitionEnd() {
-    console.log(currentSlide);
-    let slides = document.querySelectorAll(".slide");
-    if (currentSlide == slides.length - 1) {
+function handleTransitionEnd(postId, currentSlide) {
+    let slidesList = document.getElementById("listImgs-" + postId)
+    console.log("currentSlide: " + currentSlide + " slidesList.length: " + slidesList.children.length);
+    console.log(slidesList)
+    if (currentSlide == slidesList.children.length - 1) {
+        console.log("reached end img condition in handleTransitionEnd");
         slidesList.style.transition = `none`
         slidesList.style.transform = `translateX(-620.99px)`;
-        currentSlide = 1;
+        listPost[postId-1].currentSlide = 1;
+        listPost[postId-1].imgEndFlag = true;
+        showSlide(listPost[postId-1].currentSlide, postId)
+        console.log(listPost[postId-1].imgEndFlag);
         console.log("executed transition end - end");
     }
     else if (currentSlide == 0) {
         slidesList.style.transition = `none`
-        slidesList.style.transform = `translateX(-${(slides.length-2)*620.99}px)`;
-        currentSlide = slides.length - 2;
+        slidesList.style.transform = `translateX(-${(slidesList.children.length - 2) * 620.99}px)`;
+        listPost[postId-1].currentSlide = slidesList.children.length - 2;
+        listPost[postId-1].imgStartFlag = true;
+        showSlide(listPost[postId-1].currentSlide, postId)
         console.log("executed transition end - start");
     }
-    // console.log("executed");
+    var postDotSlider = document.getElementById("dotSlider-" + postId)
+    for (let index = 0; index < listPost[0].img.length; index++) {
+        if (index == listPost[postId-1].currentSlide - 1 || index == listPost[0].img.length) {
+            continue;
+        }
+        else {
+            postDotSlider.children[index].style.opacity = "0.4"
+        }
+    }
+    // postDotSlider.children[currentSlide-2].style.opacity = "0.4"
 }
 
-function showSlide(index) {
-
-    // slides.forEach((slide, i) => {
-    // const slideWidth = slide.clientWidth;
-    // slide.style.transform = `translateX(-${index * slideWidth}px)`;
-    // });
-    if (imgEndFlag == true) {
-        imgEndFlag = false;
-        console.log("got in img end");
-        console.log(slidesList.lastChild);
-        slidesList.style.transform = `translateX(-${currentSlide * 620.99}px)`;
-        console.log(slidesList.style.transition);
+function showSlide(index, postId) {
+    let slidesList = document.getElementById("listImgs-" + postId)
+    var postDotSlider = document.getElementById("dotSlider-" + postId)
+    let currentSlide1 = index
+    if (listPost[postId-1].imgEndFlag == true) {
+        imgEndFlag1 = false;
+        listPost[postId-1].currentSlide = 1;
+        slidesList.style.transform = `translateX(-${listPost[postId-1].currentSlide * 620.99}px)`;
+        console.log("went through condition imgEndFlag == true");
     }
-    else if (imgStartFlag == true) {
-        imgStartFlag = false;
-        console.log("got in img start");
-        slidesList.style.transform = `translateX(-${(slides.length-1) * 620.99}px)`;
-    } 
+    else if (listPost[postId-1].imgStartFlag == true) {
+        listPost[postId-1].imgStartFlag = false;
+        listPost[postId-1].currentSlide = slidesList.children.length - 2
+        slidesList.style.transform = `translateX(-${listPost[postId-1].currentSlide * 620.99}px)`;
+    }
     else {
-        slidesList.style.transform = `translateX(-${currentSlide * 620.99}px)`;
+        slidesList.style.transform = `translateX(-${listPost[postId-1].currentSlide * 620.99}px)`;
+    }
+    console.log("showSlide() index: " + index + ", currentSlide: " + currentSlide1);
+    console.log(postDotSlider);
+    if (index > 0) {
+        postDotSlider.children[listPost[postId-1].currentSlide - 1].style.opacity = "1"
     }
 }
 
-function renderSlider(){
-    
-}
-
-var imgEndFlag = false;
-var imgStartFlag = false;
-
-function nextSlide() {
-    console.log("nextSlide()");
-    firstElement = slidesList.firstChild
+function nextSlide(postId) {
+    let slidesList = document.getElementById("listImgs-" + postId)
+    // console.log("nextSlide currentSlide: " + currentSlide);
     slidesList.style.transition = `transform 1s ease`;
-    if (currentSlide == slides.length - 2 && imgEndFlag == false) {
-        console.log("reached the end");
-        slides = document.querySelectorAll(".slide");
-        currentSlide += 1;
-        showSlide(currentSlide)
-        imgEndFlag = true;
-    }
-    else {
-        console.log("default situation");
-        currentSlide = (currentSlide + 1) % slides.length;
-        showSlide(currentSlide);
-    }
+    listPost[postId-1].currentSlide += 1;
+    showSlide(listPost[postId-1].currentSlide, postId)
+    slidesList.addEventListener("transitionend", (event) => {
+        console.log("handleTransitionEnd() went through in nextSlide");
+        handleTransitionEnd(postId, listPost[postId-1].currentSlide);
+    });
 }
 
-function prevSlide() {
-    console.log("prevSlide()") + currentSlide;
+function prevSlide(postId) {
+    let slidesList = document.getElementById("listImgs-" + postId)
     slidesList.style.transition = `transform 1s ease`;
-    if (currentSlide == 0 && imgStartFlag == false) {
-        console.log("at the start");
-        currentSlide -= 1;
-        // slidesList.innerHTML += slidesList.innerHTML
-        showSlide(currentSlide)
-        imgStartFlag = true;
-    }
-    else {
-        currentSlide = (currentSlide - 1 + slides.length) % slides.length;
-        showSlide(currentSlide);
+    listPost[postId-1].currentSlide -= 1
+    showSlide(listPost[postId-1].currentSlide, postId);
+    slidesList.addEventListener("transitionend", (event) => {
+        console.log("handleTransitionEnd() went through in prevSlide");
+        handleTransitionEnd(postId, listPost[postId-1].currentSlide);
+    });
+}
+
+function handleDotClick(postId, targetSlide) {
+    let slidesList = document.getElementById("listImgs-" + postId)
+    slidesList.style.transition = `transform 1s ease`;
+    listPost[postId-1].currentSlide = targetSlide;
+    showSlide(listPost[postId-1].currentSlide, postId);
+    slidesList.addEventListener("transitionend", (event) => {
+        console.log("handleTransitionEnd() went through in prevSlide");
+        handleTransitionEnd(postId, listPost[postId-1].currentSlide);
+    });
+    if ((targetSlide-currentSlide) > (listPost[postId-1].img.length-(targetSlide-currentSlide))) {
+        //GO LEFT
+        
+    } else {
+        //GO RIGHT
     }
 }
 
 function handleViewMore(postId) {
-    console.log("LOL");
     const element = document.getElementById("postText-" + postId)
     element.classList.toggle("post-text-shortened");
     element.classList.toggle("post-text-full")
-    document.getElementById("postLink").innerText = "See less"
+    textInside = document.getElementById("postLink-" + postId).innerText
+    if (textInside == "View more..") {
+        document.getElementById("postLink-" + postId).innerText = "See less";
+    }
+    else {
+        document.getElementById("postLink-" + postId).innerText = "View more..";
+    }
     renderPosts();
 }
 
@@ -493,15 +531,6 @@ function onfocusCommentBar(id) {
     var element = document.getElementById("commentButton-" + id);
     element.classList.replace("comment-button-shaded", "comment-button");
 }
-
-// function changeClassCommentShaded() {
-//     var element = document.querySelector(".comment-button-shaded");
-//     var a = document.querySelector(".commentbar-inputfield-frame-textbox");
-//     if (a) {
-//         element.classList.replace("comment-button-shaded", "comment-button");
-//     }
-//     console.log("happened");
-// }
 
 function onblurCommentBar(id) {
     var element = document.getElementById("commentButton-" + id);
@@ -574,8 +603,6 @@ function renderNewCommentItem(val, id) {
             id: listPost[id - 1].comments[listPost[id - 1].comments.length - 1].id + 1,
             userid: 1,
             user: true,
-            // avatar: "./assets/" + userInfo.img,
-            // name: userInfo.username,
             time: 0,
             content: val
         })
@@ -660,24 +687,18 @@ function clearText(id) {
     document.getElementById(id).value = '';
 }
 
+// let currentSlide = 1;
+
 function renderApp() {
     renderHeader2();
     renderSideBar();
     renderPosts();
     renderComments();
+    
 }
 
 renderApp()
 
 var slides = document.querySelectorAll(".slide");
-let currentSlide = 1;
+
 const slidesList = document.querySelector(".list-imgs")
-
-slidesList.addEventListener("transitionend", (event) => {
-    handleTransitionEnd();
-});
-
-showSlide(currentSlide)
-
-// document.querySelector(".commentbar-inputfield-frame-textbox").addEventListener('focus', changeClassCommentShaded);
-// document.querySelector(".commentbar-inputfield-frame-textbox").addEventListener('focusout', changeClassComment);
