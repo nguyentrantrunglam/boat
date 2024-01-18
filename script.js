@@ -392,7 +392,7 @@ function generateImages(postId) {
     container.innerHTML += `
     <img onclick="nextSlide(${postId})" class="next" src="./assets/imgMoveRight.png" alt="">
     <img onclick="prevSlide(${postId})" class="prev" src="./assets/imgMoveLeft.png" alt="">
-    <div onmouseout="deleteSlidesDotSlider(${postId}); this.onmouseout = null;" onmouseover="addSlidesDotSlider(${postId}); this.onmouseover = null;" class="post-dotslider" id="dotSlider-${postId}"></div>
+    <div onmouseleave="deleteSlidesDotSlider(${postId});" onmouseenter="addSlidesDotSlider(${postId});" class="post-dotslider" id="dotSlider-${postId}"></div>
     `
     var dots = ''
     for (let i = 0; i < listPost[postId - 1].img.length; i++) {
@@ -439,10 +439,11 @@ function handleTransitionEnd(postId, currentSlide) {
 function showSlide(index, postId) {
     let slidesList = document.getElementById("listImgs-" + postId)
     let postDotSlider = document.getElementById("dotSlider-" + postId)
-    // if (listPost[postId - 1].dotSliderFlag == true) {
-
-    //     listPost[postId - 1].dotSliderFlag == false;
-    // }
+    if (listPost[postId - 1].dotSliderFlag == true) {
+        slidesList.style.transition = `transform 1s ease`;
+        listPost[postId - 1].currentSlide = index + ((slidesList.children.length-2)-listPost[postId-1].img.length);
+        listPost[postId - 1].dotSliderFlag = false;
+    }
     if (listPost[postId - 1].imgEndFlag == true) {
         listPost[postId - 1].imgEndFlag = false;
         listPost[postId - 1].currentSlide = 1;
@@ -454,9 +455,15 @@ function showSlide(index, postId) {
         listPost[postId - 1].currentSlide = slidesList.children.length - 2
         slidesList.style.transform = `translateX(-${listPost[postId - 1].currentSlide * 620.99}px)`;
     }
-    else {
+    else if(listPost[postId-1].currentSlide == index){
+        slidesList.style.transform = `translateX(-${listPost[postId - 1].currentSlide * 620.99}px)`;
+    }
+    else if (listPost[postId-1].currentSlide < index) {
         // slidesList.style.transition = `transform 1s ease`
         slidesList.style.transform = `translateX(-${listPost[postId - 1].currentSlide * 620.99}px)`;
+    }
+    else if (listPost[postId-1].currentSlide > index){
+        slidesList.style.transform = `translateX(${listPost[postId - 1].currentSlide * 620.99}px)`;
     }
     // console.log("showSlide() index: " + index + ", currentSlide: " + currentSlide1);
     if (listPost[postId - 1].img.length + 1 > index && index > 0) {
@@ -504,24 +511,26 @@ function handleDotClick(postId, targetSlide) {
     //     handleDotClicker(postId, listPost[postId - 1].currentSlide, targetSlide)
     // });
     if (targetSlide < listPost[postId - 1].currentSlide) {
-        if ((listPost[postId - 1].currentSlide - targetSlide) > (listPost[postId - 1].img.length - (listPost[postId - 1].currentSlide - targetSlide))) {
+        if ((listPost[postId - 1].currentSlide - targetSlide) > (slidesList.children.length - (listPost[postId - 1].currentSlide - targetSlide))) {
             //GO RIGHT
-            // transitingFlag = true;
             console.log("ITS INN");
             slidesList.style.transition = `none`
             slidesList.style.transform = `translateX(${(listPost[postId-1].currentSlide - (listPost[postId-1].img.length)) * 620.99}px)`;
-            // listPost[postId - 1].dotSliderFlag = true;
+            listPost[postId - 1].dotSliderFlag = true;
             // showSlide((listPost[postId - 1].currentSlide - (listPost[postId - 1].img.length)), postId)
-            slidesList.style.transition = `transform 1s ease`;
-            listPost[postId - 1].currentSlide = targetSlide;
-            showSlide(targetSlide, postId)
+            setTimeout(() =>{showSlide(targetSlide,postId)}, 0);
         } else {
             //GO LEFT
-            slidesList.style.transform = `translateX(-${listPost[postId - 1].currentSlide - targetSlide * 620.99}px)`;
+            console.log("GOING LEFT");
+            // slidesList.style.transform = `translateX(${(listPost[postId].currentSlide - (targetSlide+(slidesList.children.length-(listPost[postId-1].img.length+1)))) * 620.99}px)`;
+            showSlide(targetSlide,postId)
+            listPost[postId].currentSlide = targetSlide;
+            
+            // slidesList.style.transform = `translateX(${targetSlide * 620.99}px)`;
         }
     }
     else if (targetSlide > listPost[postId - 1].currentSlide) {
-        if ((targetSlide - listPost[postId - 1].currentSlide) > (listPost[postId - 1].img.length - (targetSlide - currentSlide))) {
+        if ((targetSlide - listPost[postId - 1].currentSlide) > (listPost[postId - 1].img.length - (targetSlide - listPost[postId].currentSlide))) {
             //GO LEFT
 
         } else {
@@ -583,6 +592,7 @@ function addSlidesDotSlider(postId) {
 }
 
 function deleteSlidesDotSlider(postId) {
+    console.log("DELETED EXTRA IMAGES");
     let slidesList = document.getElementById("listImgs-" + postId)
     for (let index = 0; index < slidesList.children.length - listPost[postId - 1].img.length - 2; index++) {
         slidesList.removeChild(slidesList.firstElementChild)
