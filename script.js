@@ -88,10 +88,11 @@ const listPost = [
         time: 15,
         content: "Search input is a must have of almost all apps. In this cheatsheet you can get inspiration on 6 variants of this component. Đã bao lâu chẳng thể nói được 1 lời Trip hơi sâu nhưng chắc, đấy mới là cuộc đời Dù chuyện chẳng đâu vào đâu nhưng em vẫn cố phải cười Mặc kệ giọng nói rầm rì ở trong tai Em vẫn biết từ đầu Rằng mình vốn không thuộc về nhau Nhưng khi bầu trời chuyển tối em vẫn luôn ở đấy",
         reactions: 41,
-        img: ["./assets/Rectangle 2.png", "./assets/Rectangle 1.png", "./assets/Rectangle 3.png", "./assets/Rectangle 4.png"],
+        img: ["./assets/Rectangle 1.png", "./assets/Rectangle 2.png", "./assets/Rectangle 3.png", "./assets/Rectangle 4.png", "./assets/Rectangle 3.png"],
         currentSlide: 1,
         imgEndFlag: false,
         imgStartFlag: false,
+        dotSliderFlag: false,
         comments: [
             {
                 postid: 1,
@@ -137,6 +138,7 @@ const listPost = [
         currentSlide: 1,
         imgEndFlag: false,
         imgStartFlag: false,
+        dotSliderFlag: false,
         comments: [
             {
                 postid: 2,
@@ -390,12 +392,12 @@ function generateImages(postId) {
     container.innerHTML += `
     <img onclick="nextSlide(${postId})" class="next" src="./assets/imgMoveRight.png" alt="">
     <img onclick="prevSlide(${postId})" class="prev" src="./assets/imgMoveLeft.png" alt="">
-    <div class="post-dotslider" id="dotSlider-${postId}"></div>
+    <div onmouseout="deleteSlidesDotSlider(${postId}); this.onmouseout = null;" onmouseover="addSlidesDotSlider(${postId}); this.onmouseover = null;" class="post-dotslider" id="dotSlider-${postId}"></div>
     `
     var dots = ''
     for (let i = 0; i < listPost[postId - 1].img.length; i++) {
         dots += `
-    <img onclick="handleDotClick(${postId},${i+1})" class="post-dot" id="postDot-${postId}-${i}" src="./assets/circle.png" alt="">
+    <img onclick="handleDotClick(${postId},${i + 1})" class="post-dot" id="postDot-${postId}-${i}" src="./assets/circle.png" alt="">
         `
     }
     var postDotSlider = document.getElementById("dotSlider-" + postId)
@@ -404,60 +406,62 @@ function generateImages(postId) {
 
 function handleTransitionEnd(postId, currentSlide) {
     let slidesList = document.getElementById("listImgs-" + postId)
-    console.log("currentSlide: " + currentSlide + " slidesList.length: " + slidesList.children.length);
-    console.log(slidesList)
     if (currentSlide == slidesList.children.length - 1) {
         console.log("reached end img condition in handleTransitionEnd");
         slidesList.style.transition = `none`
         slidesList.style.transform = `translateX(-620.99px)`;
-        listPost[postId-1].currentSlide = 1;
-        listPost[postId-1].imgEndFlag = true;
-        showSlide(listPost[postId-1].currentSlide, postId)
-        console.log(listPost[postId-1].imgEndFlag);
+        listPost[postId - 1].currentSlide = 1;
+        listPost[postId - 1].imgEndFlag = true;
+        showSlide(listPost[postId - 1].currentSlide, postId)
         console.log("executed transition end - end");
     }
     else if (currentSlide == 0) {
         slidesList.style.transition = `none`
         slidesList.style.transform = `translateX(-${(slidesList.children.length - 2) * 620.99}px)`;
-        listPost[postId-1].currentSlide = slidesList.children.length - 2;
-        listPost[postId-1].imgStartFlag = true;
-        showSlide(listPost[postId-1].currentSlide, postId)
+        listPost[postId - 1].currentSlide = slidesList.children.length - 2;
+        listPost[postId - 1].imgStartFlag = true;
+        showSlide(listPost[postId - 1].currentSlide, postId)
         console.log("executed transition end - start");
     }
     var postDotSlider = document.getElementById("dotSlider-" + postId)
     for (let index = 0; index < listPost[0].img.length; index++) {
-        if (index == listPost[postId-1].currentSlide - 1 || index == listPost[0].img.length) {
+        if (index == listPost[postId - 1].currentSlide - 1 || index == listPost[0].img.length) {
             continue;
         }
         else {
             postDotSlider.children[index].style.opacity = "0.4"
         }
     }
+
     // postDotSlider.children[currentSlide-2].style.opacity = "0.4"
 }
 
 function showSlide(index, postId) {
     let slidesList = document.getElementById("listImgs-" + postId)
-    var postDotSlider = document.getElementById("dotSlider-" + postId)
-    let currentSlide1 = index
-    if (listPost[postId-1].imgEndFlag == true) {
-        imgEndFlag1 = false;
-        listPost[postId-1].currentSlide = 1;
-        slidesList.style.transform = `translateX(-${listPost[postId-1].currentSlide * 620.99}px)`;
+    let postDotSlider = document.getElementById("dotSlider-" + postId)
+    // if (listPost[postId - 1].dotSliderFlag == true) {
+
+    //     listPost[postId - 1].dotSliderFlag == false;
+    // }
+    if (listPost[postId - 1].imgEndFlag == true) {
+        listPost[postId - 1].imgEndFlag = false;
+        listPost[postId - 1].currentSlide = 1;
+        slidesList.style.transform = `translateX(-${listPost[postId - 1].currentSlide * 620.99}px)`;
         console.log("went through condition imgEndFlag == true");
     }
-    else if (listPost[postId-1].imgStartFlag == true) {
-        listPost[postId-1].imgStartFlag = false;
-        listPost[postId-1].currentSlide = slidesList.children.length - 2
-        slidesList.style.transform = `translateX(-${listPost[postId-1].currentSlide * 620.99}px)`;
+    else if (listPost[postId - 1].imgStartFlag == true) {
+        listPost[postId - 1].imgStartFlag = false;
+        listPost[postId - 1].currentSlide = slidesList.children.length - 2
+        slidesList.style.transform = `translateX(-${listPost[postId - 1].currentSlide * 620.99}px)`;
     }
     else {
-        slidesList.style.transform = `translateX(-${listPost[postId-1].currentSlide * 620.99}px)`;
+        // slidesList.style.transition = `transform 1s ease`
+        slidesList.style.transform = `translateX(-${listPost[postId - 1].currentSlide * 620.99}px)`;
     }
-    console.log("showSlide() index: " + index + ", currentSlide: " + currentSlide1);
-    console.log(postDotSlider);
-    if (index > 0) {
-        postDotSlider.children[listPost[postId-1].currentSlide - 1].style.opacity = "1"
+    // console.log("showSlide() index: " + index + ", currentSlide: " + currentSlide1);
+    if (listPost[postId - 1].img.length + 1 > index && index > 0) {
+        console.log("INDEX: " + index);
+        postDotSlider.children[listPost[postId - 1].currentSlide - 1].style.opacity = "1"
     }
 }
 
@@ -465,40 +469,127 @@ function nextSlide(postId) {
     let slidesList = document.getElementById("listImgs-" + postId)
     // console.log("nextSlide currentSlide: " + currentSlide);
     slidesList.style.transition = `transform 1s ease`;
-    listPost[postId-1].currentSlide += 1;
-    showSlide(listPost[postId-1].currentSlide, postId)
+    listPost[postId - 1].currentSlide += 1;
+    showSlide(listPost[postId - 1].currentSlide, postId)
     slidesList.addEventListener("transitionend", (event) => {
         console.log("handleTransitionEnd() went through in nextSlide");
-        handleTransitionEnd(postId, listPost[postId-1].currentSlide);
+        handleTransitionEnd(postId, listPost[postId - 1].currentSlide);
     });
 }
 
 function prevSlide(postId) {
     let slidesList = document.getElementById("listImgs-" + postId)
     slidesList.style.transition = `transform 1s ease`;
-    listPost[postId-1].currentSlide -= 1
-    showSlide(listPost[postId-1].currentSlide, postId);
+    listPost[postId - 1].currentSlide -= 1
+    showSlide(listPost[postId - 1].currentSlide, postId);
     slidesList.addEventListener("transitionend", (event) => {
         console.log("handleTransitionEnd() went through in prevSlide");
-        handleTransitionEnd(postId, listPost[postId-1].currentSlide);
+        handleTransitionEnd(postId, listPost[postId - 1].currentSlide);
     });
 }
 
 function handleDotClick(postId, targetSlide) {
     let slidesList = document.getElementById("listImgs-" + postId)
+    let dotSlider = document.getElementById("dotSlider-" + postId)
     slidesList.style.transition = `transform 1s ease`;
-    listPost[postId-1].currentSlide = targetSlide;
-    showSlide(listPost[postId-1].currentSlide, postId);
+    // listPost[postId - 1].currentSlide = targetSlide;
+    // showSlide(listPost[postId - 1].currentSlide, postId);
     slidesList.addEventListener("transitionend", (event) => {
         console.log("handleTransitionEnd() went through in prevSlide");
-        handleTransitionEnd(postId, listPost[postId-1].currentSlide);
+        handleTransitionEnd(postId, listPost[postId - 1].currentSlide);
+        // handleDotSliderTransition(postId,targetSlide)
     });
-    if ((targetSlide-currentSlide) > (listPost[postId-1].img.length-(targetSlide-currentSlide))) {
-        //GO LEFT
-        
-    } else {
-        //GO RIGHT
+    // dotSlider.addEventListener("click", (event) => {
+    //     console.log("dotSlider eventListener went through");
+    //     handleDotClicker(postId, listPost[postId - 1].currentSlide, targetSlide)
+    // });
+    if (targetSlide < listPost[postId - 1].currentSlide) {
+        if ((listPost[postId - 1].currentSlide - targetSlide) > (listPost[postId - 1].img.length - (listPost[postId - 1].currentSlide - targetSlide))) {
+            //GO RIGHT
+            // transitingFlag = true;
+            console.log("ITS INN");
+            slidesList.style.transition = `none`
+            slidesList.style.transform = `translateX(${(listPost[postId-1].currentSlide - (listPost[postId-1].img.length)) * 620.99}px)`;
+            // listPost[postId - 1].dotSliderFlag = true;
+            // showSlide((listPost[postId - 1].currentSlide - (listPost[postId - 1].img.length)), postId)
+            slidesList.style.transition = `transform 1s ease`;
+            listPost[postId - 1].currentSlide = targetSlide;
+            showSlide(targetSlide, postId)
+        } else {
+            //GO LEFT
+            slidesList.style.transform = `translateX(-${listPost[postId - 1].currentSlide - targetSlide * 620.99}px)`;
+        }
     }
+    else if (targetSlide > listPost[postId - 1].currentSlide) {
+        if ((targetSlide - listPost[postId - 1].currentSlide) > (listPost[postId - 1].img.length - (targetSlide - currentSlide))) {
+            //GO LEFT
+
+        } else {
+            //GO RIGHT
+        }
+    }
+}
+
+function handleDotClicker(postId, currentSlide, targetSlide) {
+    slidesList.style.transition = `none`
+    slidesList.style.transform = `translateX(${(listPost[postId - 1].currentSlide - (listPost[postId - 1].img.length)) * 620.99}px)`;
+}
+
+function handleDotSliderTransition(postId, targetSlide) {
+    console.log("IN AGAIN");
+    showSlide(targetSlide, postId)
+}
+
+function addSlidesDotSlider(postId) {
+    let slidesList = document.getElementById("listImgs-" + postId)
+    if (slidesList.children.length == listPost[postId - 1].img.length + 2) {
+        console.log("Running");
+        let leftTxts = ''
+        let rightTxts = ''
+        let index = 1;
+        listPost[postId - 1].img.forEach(
+            imgs => {
+                if ((listPost[postId - 1].img.length) > index && index > (Math.floor(listPost[postId - 1].img.length / 2)) + 1) {
+                    leftTxts += (`
+                <div class="slide" id="slide-${postId}">
+                    <img class="post-img" src="${imgs}" alt="">
+                </div>
+                ` + leftTxts);
+                }
+                else if (Math.floor((listPost[postId - 1].img.length / 2) + 1) > index && index > 1) {
+                    rightTxts += `
+                <div class="slide" id="slide-${postId}">
+                    <img class="post-img" src="${imgs}" alt="">
+                </div>
+                `
+                }
+                index += 1
+            }
+        )
+        listPost[postId - 1].currentSlide += (Math.floor(listPost[postId - 1].img.length / 2)) - 1;
+        console.log("leftTxts: " + leftTxts);
+        // console.log("rightTxts: " + rightTxts);
+        slidesList.innerHTML = leftTxts + slidesList.innerHTML
+        // slidesList.innerHTML += rightTxts
+        // listPost[postId-1].currentSlide += 
+        // showSlide(listPost[postId - 1].currentSlide,postId)
+        slidesList.style.transition = `none`;
+        slidesList.style.transform = `translateX(-${listPost[postId - 1].currentSlide * 620.99}px)`;
+        console.log("CURRENTSLIDE AFTER: " + listPost[postId - 1].currentSlide);
+    }
+    else {
+        console.log("Not Running");
+    }
+}
+
+function deleteSlidesDotSlider(postId) {
+    let slidesList = document.getElementById("listImgs-" + postId)
+    for (let index = 0; index < slidesList.children.length - listPost[postId - 1].img.length - 2; index++) {
+        slidesList.removeChild(slidesList.firstElementChild)
+    }
+    listPost[postId - 1].currentSlide -= ((Math.floor(listPost[postId - 1].img.length / 2)) - 1);
+    slidesList.style.transition = `none`;
+    slidesList.style.transform = `translateX(-${listPost[postId - 1].currentSlide * 620.99}px)`;
 }
 
 function handleViewMore(postId) {
@@ -694,7 +785,7 @@ function renderApp() {
     renderSideBar();
     renderPosts();
     renderComments();
-    
+
 }
 
 renderApp()
