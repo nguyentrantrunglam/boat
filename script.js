@@ -1,5 +1,9 @@
 // import {userInfo} from './user.js'
 
+var goLeftLesser;
+var goRightLarger;
+var dotSliderClick = false;
+
 const userInfo = {
     img: "./assets/Bessie Cooper.png",
     username: "Bessie Cooper"
@@ -92,7 +96,9 @@ const listPost = [
         currentSlide: 1,
         imgEndFlag: false,
         imgStartFlag: false,
-        dotSliderFlag: false,
+        dotSliderFlagFirstCondt: false,
+        dotSliderFlagSecondCondt: false,
+        dotSliderTarget: null,
         comments: [
             {
                 postid: 1,
@@ -138,7 +144,9 @@ const listPost = [
         currentSlide: 1,
         imgEndFlag: false,
         imgStartFlag: false,
-        dotSliderFlag: false,
+        dotSliderFlagFirstCondt: false,
+        dotSliderFlagSecondCondt: false,
+        dotSliderTarget: null,
         comments: [
             {
                 postid: 2,
@@ -406,7 +414,7 @@ function generateImages(postId) {
 
 function handleTransitionEnd(postId, currentSlide) {
     let slidesList = document.getElementById("listImgs-" + postId)
-    if (currentSlide == slidesList.children.length - 1) {
+    if (listPost[postId-1].currentSlide == slidesList.children.length - 1) {
         console.log("reached end img condition in handleTransitionEnd");
         slidesList.style.transition = `none`
         slidesList.style.transform = `translateX(-620.99px)`;
@@ -415,7 +423,16 @@ function handleTransitionEnd(postId, currentSlide) {
         showSlide(listPost[postId - 1].currentSlide, postId)
         console.log("executed transition end - end");
     }
-    else if (currentSlide == 0) {
+    else if(listPost[postId-1].dotSliderFlagSecondCondt){
+        console.log("reached dotSliderFlagSecondCondt handleTransitionEnd");
+        listPost[postId-1].dotSliderFlagSecondCondt = false
+        slidesList.style.transition = `none`
+        slidesList.style.transform = `translateX(${(listPost[postId-1].currentSlide - (listPost[postId-1].img.length)) * 620.99}px)`;
+        listPost[postId-1].currentSlide = listPost[postId-1].dotSliderTarget + (slidesList.children.length-(listPost[postId-1].img.length + 2))
+
+    }
+    else if (listPost[postId-1].currentSlide == 0) {
+        console.log("reached start img condition in handleTransitionEnd");
         slidesList.style.transition = `none`
         slidesList.style.transform = `translateX(-${(slidesList.children.length - 2) * 620.99}px)`;
         listPost[postId - 1].currentSlide = slidesList.children.length - 2;
@@ -425,7 +442,7 @@ function handleTransitionEnd(postId, currentSlide) {
     }
     var postDotSlider = document.getElementById("dotSlider-" + postId)
     for (let index = 0; index < listPost[0].img.length; index++) {
-        if (index == listPost[postId - 1].currentSlide - 1 || index == listPost[0].img.length) {
+        if (index == listPost[postId - 1].currentSlide - 1 -(slidesList.children.length-2-listPost[postId-1].img.length) || index == listPost[0].img.length) {
             continue;
         }
         else {
@@ -437,12 +454,13 @@ function handleTransitionEnd(postId, currentSlide) {
 }
 
 function showSlide(index, postId) {
+    console.log("showSlide currentSlide: " + listPost[postId-1].currentSlide);
     let slidesList = document.getElementById("listImgs-" + postId)
     let postDotSlider = document.getElementById("dotSlider-" + postId)
-    if (listPost[postId - 1].dotSliderFlag == true) {
+    if (listPost[postId - 1].dotSliderFlagFirstCondt == true) {
         slidesList.style.transition = `transform 1s ease`;
         listPost[postId - 1].currentSlide = index + ((slidesList.children.length-2)-listPost[postId-1].img.length);
-        listPost[postId - 1].dotSliderFlag = false;
+        listPost[postId - 1].dotSliderFlagFirstCondt = false;
     }
     if (listPost[postId - 1].imgEndFlag == true) {
         listPost[postId - 1].imgEndFlag = false;
@@ -454,21 +472,37 @@ function showSlide(index, postId) {
         listPost[postId - 1].imgStartFlag = false;
         listPost[postId - 1].currentSlide = slidesList.children.length - 2
         slidesList.style.transform = `translateX(-${listPost[postId - 1].currentSlide * 620.99}px)`;
+        console.log("went through condition imgStartFlag == true");
     }
-    else if(listPost[postId-1].currentSlide == index){
+    else if (listPost[postId -1].currentSlide < goLeftLesser || listPost[postId -1].currentSlide < goRightLarger) {
+        console.log("showSlide-goLeftLesser");
+        slidesList.style.transform = `translateX(-${(listPost[postId - 1].currentSlide+1) * 620.99}px)`;
+        listPost[postId-1].currentSlide += 1
+        // goLeftLesser = null;
+    }
+    else{
+        console.log("showSlide-default");
         slidesList.style.transform = `translateX(-${listPost[postId - 1].currentSlide * 620.99}px)`;
     }
-    else if (listPost[postId-1].currentSlide < index) {
-        // slidesList.style.transition = `transform 1s ease`
-        slidesList.style.transform = `translateX(-${listPost[postId - 1].currentSlide * 620.99}px)`;
-    }
-    else if (listPost[postId-1].currentSlide > index){
-        slidesList.style.transform = `translateX(${listPost[postId - 1].currentSlide * 620.99}px)`;
-    }
+    // else if (listPost[postId-1].currentSlide < index) {
+    //     // slidesList.style.transition = `transform 1s ease`
+    //     console.log("showSlide-right");
+    //     slidesList.style.transform = `translateX(-${listPost[postId - 1].currentSlide * 620.99}px)`;
+    // }
+    // else if (listPost[postId-1].currentSlide > index){
+    //     console.log("showSlide-left");
+    //     slidesList.style.transform = `translateX(${listPost[postId-1].currentSlide * 620.99}px)`;
+    // }
     // console.log("showSlide() index: " + index + ", currentSlide: " + currentSlide1);
-    if (listPost[postId - 1].img.length + 1 > index && index > 0) {
-        console.log("INDEX: " + index);
+    console.log("goLeftLesser: " + goLeftLesser);
+    if (listPost[postId - 1].img.length + 1 > index && index > 0 && goLeftLesser == undefined) {
+        // console.log("INDEX: " + index);
         postDotSlider.children[listPost[postId - 1].currentSlide - 1].style.opacity = "1"
+    }
+    else if (goLeftLesser || goRightLarger) {
+        goLeftLesser = undefined;
+        goRightLarger = undefined;
+        postDotSlider.children[listPost[postId - 1].currentSlide - 2].style.opacity = "1"
     }
 }
 
@@ -488,6 +522,7 @@ function prevSlide(postId) {
     let slidesList = document.getElementById("listImgs-" + postId)
     slidesList.style.transition = `transform 1s ease`;
     listPost[postId - 1].currentSlide -= 1
+    console.log("prevSlide currentSlide: " + listPost[postId-1].currentSlide);
     showSlide(listPost[postId - 1].currentSlide, postId);
     slidesList.addEventListener("transitionend", (event) => {
         console.log("handleTransitionEnd() went through in prevSlide");
@@ -496,6 +531,8 @@ function prevSlide(postId) {
 }
 
 function handleDotClick(postId, targetSlide) {
+    dotSliderClick = true;
+    listPost[postId-1].dotSliderTarget = targetSlide
     let slidesList = document.getElementById("listImgs-" + postId)
     let dotSlider = document.getElementById("dotSlider-" + postId)
     slidesList.style.transition = `transform 1s ease`;
@@ -513,28 +550,43 @@ function handleDotClick(postId, targetSlide) {
     if (targetSlide < listPost[postId - 1].currentSlide) {
         if ((listPost[postId - 1].currentSlide - targetSlide) > (slidesList.children.length - (listPost[postId - 1].currentSlide - targetSlide))) {
             //GO RIGHT
-            console.log("ITS INN");
             slidesList.style.transition = `none`
             slidesList.style.transform = `translateX(${(listPost[postId-1].currentSlide - (listPost[postId-1].img.length)) * 620.99}px)`;
-            listPost[postId - 1].dotSliderFlag = true;
+            listPost[postId - 1].dotSliderFlagFirstCondt = true;
             // showSlide((listPost[postId - 1].currentSlide - (listPost[postId - 1].img.length)), postId)
             setTimeout(() =>{showSlide(targetSlide,postId)}, 0);
         } else {
             //GO LEFT
-            console.log("GOING LEFT");
             // slidesList.style.transform = `translateX(${(listPost[postId].currentSlide - (targetSlide+(slidesList.children.length-(listPost[postId-1].img.length+1)))) * 620.99}px)`;
+            listPost[postId-1].currentSlide = targetSlide;
+            console.log(targetSlide+slidesList.children.length-listPost[postId-1].img.length-2);
+            goLeftLesser = targetSlide+slidesList.children.length-listPost[postId-1].img.length-2  
             showSlide(targetSlide,postId)
-            listPost[postId].currentSlide = targetSlide;
-            
             // slidesList.style.transform = `translateX(${targetSlide * 620.99}px)`;
         }
     }
-    else if (targetSlide > listPost[postId - 1].currentSlide) {
-        if ((targetSlide - listPost[postId - 1].currentSlide) > (listPost[postId - 1].img.length - (targetSlide - listPost[postId].currentSlide))) {
-            //GO LEFT
-
+    else if (targetSlide > listPost[postId - 1].currentSlide-1) {
+        if ((targetSlide - (listPost[postId - 1].currentSlide-(slidesList.children.length-(listPost[postId-1].img.length+2)))) > listPost[postId-1].img.length-targetSlide) {
+            //GO LEFT (slidesList.children.length - (targetSlide - (listPost[postId - 1].currentSlide-(slidesList.children.length-(listPost[postId-1].img.length+2)))))
+            console.log("GO LEFT LARGER " + listPost[postId-1].currentSlide);
+            console.log("targetSlide: " + targetSlide);
+            console.log(listPost[postId - 1].currentSlide-(slidesList.children.length-(listPost[postId-1].img.length-2)));
+            listPost[postId-1].currentSlide -= listPost[postId-1].img.length - targetSlide + 1
+            console.log("currentSlide GO LEFT LARGER" + listPost[postId-1].currentSlide);
+            listPost[postId-1].dotSliderFlagSecondCondt = true;
+            showSlide(targetSlide,postId)
+            // setTimeout(() => {
+            //     slidesList.style.transition = `none`
+            //     slidesList.style.transform = `translateX(${(listPost[postId-1].currentSlide - (listPost[postId-1].img.length)) * 620.99}px)`;
+            // },0);
+            
+            listPost[postId - 1].dotSliderFlagSecondCondt = true;
         } else {
             //GO RIGHT
+            listPost[postId-1].currentSlide = targetSlide;
+            // console.log(targetSlide+slidesList.children.length-listPost[postId-1].img.length-2);
+            goLeftLesser = targetSlide+slidesList.children.length-listPost[postId-1].img.length
+            showSlide(targetSlide,postId)
         }
     }
 }
@@ -593,13 +645,18 @@ function addSlidesDotSlider(postId) {
 
 function deleteSlidesDotSlider(postId) {
     console.log("DELETED EXTRA IMAGES");
+    console.log("deleteSlides currentSlide: " + listPost[postId-1].currentSlide);
     let slidesList = document.getElementById("listImgs-" + postId)
     for (let index = 0; index < slidesList.children.length - listPost[postId - 1].img.length - 2; index++) {
         slidesList.removeChild(slidesList.firstElementChild)
     }
     listPost[postId - 1].currentSlide -= ((Math.floor(listPost[postId - 1].img.length / 2)) - 1);
+    console.log("deleteSlides currentSlide AFTER CHANGE: " + listPost[postId-1].currentSlide);
     slidesList.style.transition = `none`;
     slidesList.style.transform = `translateX(-${listPost[postId - 1].currentSlide * 620.99}px)`;
+    // setTimeout(() => {
+    //     showSlide(listPost[postId-1].currentSlide,postId)
+    // },0)
 }
 
 function handleViewMore(postId) {
